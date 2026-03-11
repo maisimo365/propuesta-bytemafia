@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { Layers3, MapPin, Wand2, Search, User, Menu, Bell, Palette, Check, Bed, Bath, Square, ArrowRight, Sparkles } from 'lucide-react';
+import { Layers3, MapPin, Wand2, Search, User, Menu, Bell, Palette, Check, Bed, Bath, Square, ArrowRight, Sparkles, Moon, Sun } from 'lucide-react';
 import { Inter, Montserrat } from 'next/font/google';
 
 // Configuración de fuentes con Next.js
@@ -98,6 +98,7 @@ const PROPERTIES = [
 export default function Propuesta7Marzo() {
   const [font, setFont] = useState('font-inter');
   const [currentTheme, setCurrentTheme] = useState<ThemeKey>('blue');
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Helpers para clases dinámicas
   const theme = THEMES[currentTheme];
@@ -105,10 +106,10 @@ export default function Propuesta7Marzo() {
   const g = theme.gray;    // Escala de grises (ej. slate)
 
   return (
-    <div className={`${font === 'font-inter' ? inter.className : montserrat.className} min-h-screen bg-${g}-50 text-${g}-900 transition-all duration-300`}>
+    <div className={`${font === 'font-inter' ? inter.className : montserrat.className} min-h-screen ${isDarkMode ? `bg-${g}-950 text-${g}-100` : `bg-[#F4F0EC] text-${g}-900`} transition-all duration-300`}>
       
       {/* HEADER TIPO APP REAL (Estilo Airbnb/Zillow) */}
-      <nav className={`sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-${g}-200 shadow-sm transition-all duration-300`}>
+      <nav className={`sticky top-0 z-50 ${isDarkMode ? `bg-${g}-950/90 border-${g}-800` : `bg-[#F4F0EC]/90 border-${g}-200`} backdrop-blur-md border-b shadow-sm transition-all duration-300`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-20 items-center">
             
@@ -118,12 +119,12 @@ export default function Propuesta7Marzo() {
                 <Layers3 className="text-white size-6" />
               </div>
               <span className={`text-xl font-bold tracking-tight hidden md:block transition-opacity`}>
-                <span className={`text-${g}-900`}>In</span><span className={`text-${p}-600`}>Devs</span>
+                <span className={`${isDarkMode ? 'text-white' : `text-${g}-900`}`}>In</span><span className={`text-${p}-600`}>Devs</span>
               </span>
             </div>
 
             {/* Navigation Links (NUEVO) */}
-            <div className={`hidden xl:flex items-center gap-8 ml-10 text-sm font-medium text-${g}-600`}>
+            <div className={`hidden xl:flex items-center gap-8 ml-10 text-sm font-medium ${isDarkMode ? `text-${g}-300` : `text-${g}-600`}`}>
                 <a href="#" className={`hover:text-${p}-600 transition-colors`}>Comprar</a>
                 <a href="#" className={`hover:text-${p}-600 transition-colors`}>Alquilar</a>
                 <a href="#" className={`hover:text-${p}-600 transition-colors`}>Vender</a>
@@ -134,16 +135,16 @@ export default function Propuesta7Marzo() {
             <div className="hidden md:flex flex-1 max-w-lg mx-8">
               <div className="relative w-full group transition-transform duration-300 hover:scale-[1.02]">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className={`h-4 w-4 text-${g}-400 group-hover:text-${p}-500 transition-colors`} />
+                  <Search className={`h-4 w-4 ${isDarkMode ? `text-${g}-500` : `text-${g}-400`} group-hover:text-${p}-500 transition-colors`} />
                 </div>
                 <input
                   type="text"
-                  className={`block w-full pl-10 pr-12 py-2.5 border border-${g}-200 rounded-full leading-5 bg-${g}-50 text-${g}-900 placeholder-${g}-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-${p}-500/20 focus:border-${p}-500 sm:text-sm transition-all shadow-sm group-hover:shadow-md group-hover:border-${p}-200`}
+                  className={`block w-full pl-10 pr-12 py-2.5 border ${isDarkMode ? `border-${g}-700 bg-${g}-900 text-white placeholder-${g}-500 focus:bg-${g}-800` : `border-${g}-200 bg-${g}-50 text-${g}-900 placeholder-${g}-400 focus:bg-white`} rounded-full leading-5 focus:outline-none focus:ring-2 focus:ring-${p}-500/20 focus:border-${p}-500 sm:text-sm transition-all shadow-sm group-hover:shadow-md group-hover:border-${p}-200`}
                   placeholder="Buscar por ciudad, zona o código..."
                   readOnly
                 />
                 <div className="absolute inset-y-0 right-0 pr-2 flex items-center">
-                    <button className={`bg-${p}-600 text-white rounded-full p-1.5 hover:bg-${p}-700 transition-all hover:scale-110 shadow-sm`}>
+                    <button className={`bg-${p}-600 text-white rounded-full p-1.5 hover:bg-${p}-700 transition-all hover:scale-110 shadow-lg shadow-${p}-600/30`}>
                         <Search className="size-3" />
                     </button>
                 </div>
@@ -152,17 +153,17 @@ export default function Propuesta7Marzo() {
 
             {/* 3. Menú Usuario */}
             <div className="flex items-center gap-4">
-              <button className={`text-sm font-semibold text-${g}-600 hover:text-${p}-600 px-4 py-2 rounded-full hover:bg-${p}-50 transition-all duration-300 hidden lg:block`}>
+              <button className={`text-sm font-semibold ${isDarkMode ? `text-${g}-300 hover:bg-${g}-800` : `text-${g}-600 hover:bg-${p}-50`} hover:text-${p}-600 px-4 py-2 rounded-full transition-all duration-300 hidden lg:block`}>
                 Publicar Inmueble
               </button>
               <div className="flex items-center gap-3">
-                <button className={`text-${g}-500 hover:bg-${g}-100 hover:text-${p}-600 p-2 rounded-full transition-all relative group`}>
+                <button className={`${isDarkMode ? `text-${g}-400 hover:bg-${g}-800` : `text-${g}-500 hover:bg-${g}-100`} hover:text-${p}-600 p-2 rounded-full transition-all relative group`}>
                     <Bell className="size-5" />
                     <span className="absolute top-2 right-2 size-2 bg-rose-500 rounded-full border-2 border-white group-hover:scale-110 transition-transform"></span>
                 </button>
-                <div className={`flex items-center gap-2 border border-${g}-200 rounded-full px-2 py-1 pl-3 hover:shadow-md hover:border-${p}-200 transition-all cursor-pointer bg-white group`}>
-                  <Menu className={`size-4 text-${g}-600 group-hover:text-${g}-900`} />
-                  <div className={`size-8 bg-${g}-100 rounded-full flex items-center justify-center text-${g}-500 group-hover:bg-${p}-600 group-hover:text-white transition-colors`}>
+                <div className={`flex items-center gap-2 border ${isDarkMode ? `border-${g}-700 bg-${g}-900` : `border-${g}-200 bg-white`} rounded-full px-2 py-1 pl-3 hover:shadow-md hover:border-${p}-200 transition-all cursor-pointer group`}>
+                  <Menu className={`size-4 ${isDarkMode ? `text-${g}-400` : `text-${g}-600`} group-hover:text-${g}-900`} />
+                  <div className={`size-8 ${isDarkMode ? `bg-${g}-800 text-${g}-400` : `bg-${g}-100 text-${g}-500`} rounded-full flex items-center justify-center group-hover:bg-${p}-600 group-hover:text-white transition-colors`}>
                     <User className="size-5" />
                   </div>
                 </div>
@@ -173,15 +174,15 @@ export default function Propuesta7Marzo() {
       </nav>
 
       {/* BARRA DE CONTROL DE DEMO (Para cambiar fuentes y temas) */}
-      <div className={`bg-white text-${g}-500 py-2 text-center text-xs border-b border-${g}-200 transition-colors duration-500`}>
+      <div className={`${isDarkMode ? `bg-${g}-900 text-${g}-400 border-${g}-800` : `bg-white text-${g}-500 border-${g}-200`} py-2 text-center text-xs border-b transition-colors duration-500`}>
           <div className="flex justify-center gap-6 items-center flex-wrap px-4">
             
             {/* Selector de Fuente */}
             <div className="flex items-center gap-2">
                 <Wand2 className="size-3" />
                 <span className="opacity-80 font-mono">FUENTE:</span>
-                <button onClick={() => setFont('font-montserrat')} className={`px-3 py-0.5 rounded transition-colors ${font === 'font-montserrat' ? `bg-${p}-600 text-white` : `hover:bg-${g}-100`}`}>Montserrat</button>
-                <button onClick={() => setFont('font-inter')} className={`px-3 py-0.5 rounded transition-colors ${font === 'font-inter' ? `bg-${p}-600 text-white` : `hover:bg-${g}-100`}`}>Inter</button>
+                <button onClick={() => setFont('font-montserrat')} className={`px-3 py-0.5 rounded transition-colors ${font === 'font-montserrat' ? `bg-${p}-600 text-white` : `hover:bg-${g}-100 ${isDarkMode ? `hover:bg-${g}-800` : ''}`}`}>Montserrat</button>
+                <button onClick={() => setFont('font-inter')} className={`px-3 py-0.5 rounded transition-colors ${font === 'font-inter' ? `bg-${p}-600 text-white` : `hover:bg-${g}-100 ${isDarkMode ? `hover:bg-${g}-800` : ''}`}`}>Inter</button>
             </div>
 
             <div className={`w-px h-4 bg-${g}-200 hidden sm:block`}></div>
@@ -205,6 +206,14 @@ export default function Propuesta7Marzo() {
                 </div>
             </div>
 
+            <div className={`w-px h-4 bg-${g}-200 hidden sm:block`}></div>
+
+            {/* Selector de Modo Oscuro */}
+            <button onClick={() => setIsDarkMode(!isDarkMode)} className={`flex items-center gap-2 px-3 py-0.5 rounded-full transition-all ${isDarkMode ? `bg-${g}-800 text-white ring-1 ring-${g}-700` : `bg-${g}-100 text-${g}-600 hover:bg-${g}-200`}`}>
+                {isDarkMode ? <Moon className="size-3" /> : <Sun className="size-3 text-amber-500" />}
+                <span className="font-bold tracking-wide text-[10px]">{isDarkMode ? 'OSCURO' : 'CLARO'}</span>
+            </button>
+
           </div>
       </div>
 
@@ -225,11 +234,11 @@ export default function Propuesta7Marzo() {
                 </p>
                 
                 {/* Search Bar Hero */}
-                <div className="bg-white p-2 rounded-full shadow-2xl max-w-2xl mx-auto flex flex-col sm:flex-row gap-2">
+                <div className={`${isDarkMode ? `bg-${g}-900` : `bg-white`} p-2 rounded-full shadow-2xl max-w-2xl mx-auto flex flex-col sm:flex-row gap-2 transition-colors`}>
                     <input 
                         type="text" 
                         placeholder="¿Dónde quieres vivir?" 
-                        className={`flex-1 px-6 py-3 rounded-full text-${g}-900 focus:outline-none`}
+                        className={`flex-1 px-6 py-3 rounded-full ${isDarkMode ? `text-white bg-${g}-900 placeholder-${g}-500` : `text-${g}-900 bg-white`} focus:outline-none transition-colors`}
                     />
                     <button className={`bg-${p}-600 text-white px-8 py-3 rounded-full font-bold hover:bg-${p}-700 transition-colors flex items-center justify-center gap-2`}>
                         <Search className="size-4" /> Buscar
@@ -244,8 +253,8 @@ export default function Propuesta7Marzo() {
             <section>
                 <div className="flex justify-between items-end mb-8">
                     <div>
-                        <h2 className={`text-3xl font-bold text-${g}-900`}>Propiedades Destacadas</h2>
-                        <p className={`text-${g}-600 mt-2`}>Selección exclusiva de inmuebles para ti.</p>
+                        <h2 className={`text-3xl font-bold ${isDarkMode ? 'text-white' : `text-${g}-900`}`}>Propiedades Destacadas</h2>
+                        <p className={`${isDarkMode ? `text-${g}-400` : `text-${g}-600`} mt-2`}>Selección exclusiva de inmuebles para ti.</p>
                     </div>
                     <button className={`text-${p}-600 font-semibold hover:underline flex items-center gap-1`}>
                         Ver todas <ArrowRight className="size-4" />
@@ -254,7 +263,7 @@ export default function Propuesta7Marzo() {
 
                 <div className="grid md:grid-cols-3 gap-8">
                     {PROPERTIES.map((prop) => (
-                        <div key={prop.id} className={`bg-white rounded-2xl border border-${g}-200 overflow-hidden hover:shadow-2xl hover:shadow-${p}-500/20 hover:border-${p}-500 transition-all group cursor-pointer`}>
+                        <div key={prop.id} className={`${isDarkMode ? `bg-${g}-900 border-${g}-800` : `bg-white border-${g}-200`} rounded-2xl border overflow-hidden hover:shadow-2xl hover:shadow-${p}-500/20 hover:border-${p}-500 transition-all group cursor-pointer`}>
                             <div className="relative h-64 overflow-hidden">
                                 <img src={prop.image} alt={prop.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                 <div className={`absolute top-4 right-4 bg-${p}-600 px-3 py-1 rounded-full text-xs font-bold text-white shadow-sm`}>
@@ -263,13 +272,13 @@ export default function Propuesta7Marzo() {
                             </div>
                             <div className="p-6">
                                 <div className="flex justify-between items-start mb-2">
-                                    <h3 className={`text-lg font-bold text-${g}-900 group-hover:text-${p}-600 transition-colors line-clamp-1`}>{prop.title}</h3>
+                                    <h3 className={`text-lg font-bold ${isDarkMode ? `text-white group-hover:text-${p}-400` : `text-${g}-900 group-hover:text-${p}-600`} transition-colors line-clamp-1`}>{prop.title}</h3>
                                     <p className={`text-lg font-bold text-${p}-600`}>{prop.price}</p>
                                 </div>
-                                <p className={`text-${g}-500 text-sm mb-4 flex items-center gap-1`}>
+                                <p className={`${isDarkMode ? `text-${g}-400` : `text-${g}-500`} text-sm mb-4 flex items-center gap-1`}>
                                     <MapPin className={`size-3 text-${p}-500`} /> {prop.location}
                                 </p>
-                                <div className={`flex items-center gap-4 text-${g}-600 text-sm border-t border-${g}-100 pt-4`}>
+                                <div className={`flex items-center gap-4 ${isDarkMode ? `text-${g}-400 border-${g}-800` : `text-${g}-600 border-${g}-100`} text-sm border-t pt-4`}>
                                     <div className="flex items-center gap-1"><Bed className={`size-4 text-${p}-500`} /> {prop.beds}</div>
                                     <div className="flex items-center gap-1"><Bath className={`size-4 text-${p}-500`} /> {prop.baths}</div>
                                     <div className="flex items-center gap-1"><Square className={`size-4 text-${p}-500`} /> {prop.sqft}m²</div>
@@ -301,14 +310,14 @@ export default function Propuesta7Marzo() {
             </section>
 
             {/* SECCIÓN MAPA */}
-            <section className={`bg-white p-1 rounded-3xl shadow-xl border border-${g}-200 overflow-hidden`}>
+            <section className={`${isDarkMode ? `bg-${g}-900 border-${g}-800` : `bg-white border-${g}-200`} p-1 rounded-3xl shadow-xl border overflow-hidden transition-colors`}>
                 <div className="p-8 pb-0 flex justify-between items-center mb-6">
                     <div>
-                        <h3 className={`text-2xl font-bold text-${g}-900 mb-2`}>Explora en el Mapa</h3>
-                        <p className={`text-${g}-600`}>Encuentra propiedades por ubicación exacta.</p>
+                        <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : `text-${g}-900`} mb-2`}>Explora en el Mapa</h3>
+                        <p className={`${isDarkMode ? `text-${g}-400` : `text-${g}-600`}`}>Encuentra propiedades por ubicación exacta.</p>
                     </div>
                 </div>
-                <div className={`h-96 w-full bg-${g}-100 relative`}>
+                <div className={`h-96 w-full ${isDarkMode ? `bg-${g}-800` : `bg-${g}-100`} relative rounded-2xl overflow-hidden`}>
                     <LeafletMap />
                 </div>
             </section>
@@ -332,7 +341,7 @@ export default function Propuesta7Marzo() {
         </Link>
       </div>
 
-      <footer className={`bg-${g}-50 border-t-4 border-${p}-500 pt-16 pb-8 mt-20`}>
+      <footer className={`${isDarkMode ? `bg-${g}-950 border-${g}-800` : `bg-${g}-50 border-${g}-200`} border-t-4 border-t-${p}-500 pt-16 pb-8 mt-20 transition-colors`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                 <div className="space-y-4">
@@ -340,16 +349,16 @@ export default function Propuesta7Marzo() {
                         <div className={`bg-${p}-600 p-1.5 rounded-lg`}>
                             <Layers3 className="text-white size-5" />
                         </div>
-                        <span className={`text-xl font-bold text-${g}-900`}>InDevs</span>
+                        <span className={`text-xl font-bold ${isDarkMode ? 'text-white' : `text-${g}-900`}`}>InDevs</span>
                     </div>
-                    <p className={`text-${g}-500 text-sm leading-relaxed`}>
+                    <p className={`${isDarkMode ? `text-${g}-400` : `text-${g}-500`} text-sm leading-relaxed`}>
                         Revolucionando el mercado inmobiliario con tecnología de punta y diseño centrado en el usuario.
                     </p>
                 </div>
                 
                 <div>
-                    <h4 className={`font-bold text-${p}-700 mb-4`}>Empresa</h4>
-                    <ul className={`space-y-2 text-sm text-${g}-600`}>
+                    <h4 className={`font-bold ${isDarkMode ? `text-${p}-400` : `text-${p}-700`} mb-4`}>Empresa</h4>
+                    <ul className={`space-y-2 text-sm ${isDarkMode ? `text-${g}-400` : `text-${g}-600`}`}>
                         <li><a href="#" className="hover:underline">Sobre Nosotros</a></li>
                         <li><a href="#" className="hover:underline">Carreras</a></li>
                         <li><a href="#" className="hover:underline">Blog</a></li>
@@ -358,8 +367,8 @@ export default function Propuesta7Marzo() {
                 </div>
 
                 <div>
-                    <h4 className={`font-bold text-${p}-700 mb-4`}>Soporte</h4>
-                    <ul className={`space-y-2 text-sm text-${g}-600`}>
+                    <h4 className={`font-bold ${isDarkMode ? `text-${p}-400` : `text-${p}-700`} mb-4`}>Soporte</h4>
+                    <ul className={`space-y-2 text-sm ${isDarkMode ? `text-${g}-400` : `text-${g}-600`}`}>
                         <li><a href="#" className="hover:underline">Centro de Ayuda</a></li>
                         <li><a href="#" className="hover:underline">Contactar Agente</a></li>
                         <li><a href="#" className="hover:underline">Estado del Servicio</a></li>
@@ -367,8 +376,8 @@ export default function Propuesta7Marzo() {
                 </div>
 
                 <div>
-                    <h4 className={`font-bold text-${p}-700 mb-4`}>Legal</h4>
-                    <ul className={`space-y-2 text-sm text-${g}-600`}>
+                    <h4 className={`font-bold ${isDarkMode ? `text-${p}-400` : `text-${p}-700`} mb-4`}>Legal</h4>
+                    <ul className={`space-y-2 text-sm ${isDarkMode ? `text-${g}-400` : `text-${g}-600`}`}>
                         <li><a href="#" className="hover:underline">Términos de Servicio</a></li>
                         <li><a href="#" className="hover:underline">Política de Privacidad</a></li>
                         <li><a href="#" className="hover:underline">Cookies</a></li>
@@ -376,8 +385,8 @@ export default function Propuesta7Marzo() {
                 </div>
             </div>
             
-            <div className={`border-t border-${g}-200 pt-8 flex flex-col md:flex-row justify-between items-center gap-4`}>
-                <p className={`text-xs text-${g}-500`}>© 2026 InDevs Team. Todos los derechos reservados.</p>
+            <div className={`border-t ${isDarkMode ? `border-${g}-800` : `border-${g}-200`} pt-8 flex flex-col md:flex-row justify-between items-center gap-4`}>
+                <p className={`text-xs ${isDarkMode ? `text-${g}-500` : `text-${g}-500`}`}>© 2026 InDevs Team. Todos los derechos reservados.</p>
             </div>
         </div>
       </footer>

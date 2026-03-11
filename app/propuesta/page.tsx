@@ -49,7 +49,9 @@ import {
   BarChart3,
   TrendingUp,
   Globe,
-  Smartphone
+  Smartphone,
+  Moon,
+  Sun
 } from 'lucide-react';
 import { Inter, Montserrat } from 'next/font/google';
 
@@ -69,7 +71,7 @@ const THEMES = {
 type ThemeKey = keyof typeof THEMES;
 
 // Componente Demo de Formulario (Definido aquí para uso en la propuesta)
-const FormValidationDemo = ({ p, g }: { p: string, g: string }) => {
+const FormValidationDemo = ({ p, g, isDarkMode }: { p: string, g: string, isDarkMode: boolean }) => {
   const [form, setForm] = useState({ email: '', password: '', phone: '', price: '' });
   const [showPass, setShowPass] = useState(false);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
@@ -104,23 +106,23 @@ const FormValidationDemo = ({ p, g }: { p: string, g: string }) => {
   return (
     <div className={`grid md:grid-cols-2 gap-12 items-center`}>
         {/* Form Visual */}
-        <div className={`bg-white p-8 rounded-2xl border border-${g}-200 shadow-lg`}>
-            <h3 className={`text-lg font-bold text-${g}-900 mb-6 flex items-center gap-2`}>
+        <div className={`${isDarkMode ? `bg-${g}-900 border-${g}-800` : `bg-white border-${g}-200`} p-8 rounded-2xl border shadow-lg transition-colors`}>
+            <h3 className={`text-lg font-bold ${isDarkMode ? 'text-white' : `text-${g}-900`} mb-6 flex items-center gap-2`}>
                 <div className={`p-2 bg-${p}-100 rounded-lg text-${p}-600`}><ShieldCheck className="size-5" /></div>
                 Formulario Seguro
             </h3>
             <div className="space-y-5">
                 {/* Email */}
                 <div>
-                    <label className={`text-xs font-semibold text-${g}-500 uppercase tracking-wider`}>Email Corporativo</label>
+                    <label className={`text-xs font-semibold ${isDarkMode ? `text-${g}-400` : `text-${g}-500`} uppercase tracking-wider`}>Email Corporativo</label>
                     <div className="relative mt-1">
-                        <Mail className={`absolute left-3 top-3 size-4 text-${g}-400`} />
+                        <Mail className={`absolute left-3 top-3 size-4 ${isDarkMode ? `text-${g}-500` : `text-${g}-400`}`} />
                         <input 
                             type="email" 
                             value={form.email}
                             onChange={(e) => setForm({...form, email: e.target.value})}
                             onBlur={() => setTouched({...touched, email: true})}
-                            className={`w-full pl-10 pr-4 py-2.5 rounded-lg border ${touched.email && errors.email ? 'border-red-500 bg-red-50 text-red-900' : `border-${g}-200 focus:border-${p}-500 focus:ring-4 focus:ring-${p}-500/10`} transition-all outline-none text-sm`}
+                            className={`w-full pl-10 pr-4 py-2.5 rounded-lg border ${touched.email && errors.email ? 'border-red-500 bg-red-50 text-red-900' : `${isDarkMode ? `border-${g}-700 bg-${g}-950 text-white focus:bg-${g}-900` : `border-${g}-200 focus:bg-white text-${g}-900`} focus:border-${p}-500 focus:ring-4 focus:ring-${p}-500/10`} transition-all outline-none text-sm`}
                             placeholder="nombre@empresa.com"
                         />
                     </div>
@@ -129,15 +131,15 @@ const FormValidationDemo = ({ p, g }: { p: string, g: string }) => {
 
                 {/* Password */}
                 <div>
-                    <label className={`text-xs font-semibold text-${g}-500 uppercase tracking-wider`}>Contraseña Segura</label>
+                    <label className={`text-xs font-semibold ${isDarkMode ? `text-${g}-400` : `text-${g}-500`} uppercase tracking-wider`}>Contraseña Segura</label>
                     <div className="relative mt-1">
-                        <Lock className={`absolute left-3 top-3 size-4 text-${g}-400`} />
+                        <Lock className={`absolute left-3 top-3 size-4 ${isDarkMode ? `text-${g}-500` : `text-${g}-400`}`} />
                         <input 
                             type={showPass ? "text" : "password"}
                             value={form.password}
                             onChange={(e) => setForm({...form, password: e.target.value})}
                             onBlur={() => setTouched({...touched, password: true})}
-                            className={`w-full pl-10 pr-10 py-2.5 rounded-lg border ${touched.password && errors.password ? 'border-red-500 bg-red-50 text-red-900' : `border-${g}-200 focus:border-${p}-500 focus:ring-4 focus:ring-${p}-500/10`} transition-all outline-none text-sm`}
+                            className={`w-full pl-10 pr-10 py-2.5 rounded-lg border ${touched.password && errors.password ? 'border-red-500 bg-red-50 text-red-900' : `${isDarkMode ? `border-${g}-700 bg-${g}-950 text-white focus:bg-${g}-900` : `border-${g}-200 focus:bg-white text-${g}-900`} focus:border-${p}-500 focus:ring-4 focus:ring-${p}-500/10`} transition-all outline-none text-sm`}
                             placeholder="••••••••"
                         />
                         <button onClick={() => setShowPass(!showPass)} className={`absolute right-3 top-3 text-${g}-400 hover:text-${g}-600`}>
@@ -146,9 +148,9 @@ const FormValidationDemo = ({ p, g }: { p: string, g: string }) => {
                     </div>
                     {/* Password Strength Indicators */}
                     <div className="flex gap-2 mt-2">
-                        <div className={`h-1 flex-1 rounded-full ${form.password.length >= 8 ? 'bg-green-500' : `bg-${g}-200`}`}></div>
-                        <div className={`h-1 flex-1 rounded-full ${/[A-Z]/.test(form.password) ? 'bg-green-500' : `bg-${g}-200`}`}></div>
-                        <div className={`h-1 flex-1 rounded-full ${/[0-9]/.test(form.password) ? 'bg-green-500' : `bg-${g}-200`}`}></div>
+                        <div className={`h-1 flex-1 rounded-full ${form.password.length >= 8 ? 'bg-green-500' : `${isDarkMode ? `bg-${g}-700` : `bg-${g}-200`}`}`}></div>
+                        <div className={`h-1 flex-1 rounded-full ${/[A-Z]/.test(form.password) ? 'bg-green-500' : `${isDarkMode ? `bg-${g}-700` : `bg-${g}-200`}`}`}></div>
+                        <div className={`h-1 flex-1 rounded-full ${/[0-9]/.test(form.password) ? 'bg-green-500' : `${isDarkMode ? `bg-${g}-700` : `bg-${g}-200`}`}`}></div>
                     </div>
                     {touched.password && errors.password && <p className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle className="size-3" /> {errors.password}</p>}
                 </div>
@@ -156,15 +158,15 @@ const FormValidationDemo = ({ p, g }: { p: string, g: string }) => {
                 <div className="grid grid-cols-2 gap-4">
                     {/* Phone (Mask) */}
                     <div>
-                        <label className={`text-xs font-semibold text-${g}-500 uppercase tracking-wider`}>Teléfono</label>
+                        <label className={`text-xs font-semibold ${isDarkMode ? `text-${g}-400` : `text-${g}-500`} uppercase tracking-wider`}>Teléfono</label>
                         <div className="relative mt-1">
-                            <Phone className={`absolute left-3 top-3 size-4 text-${g}-400`} />
+                            <Phone className={`absolute left-3 top-3 size-4 ${isDarkMode ? `text-${g}-500` : `text-${g}-400`}`} />
                             <input 
                                 type="text" 
                                 value={form.phone}
                                 onChange={handlePhone}
                                 onBlur={() => setTouched({...touched, phone: true})}
-                                className={`w-full pl-10 pr-4 py-2.5 rounded-lg border ${touched.phone && errors.phone ? 'border-red-500 bg-red-50 text-red-900' : `border-${g}-200 focus:border-${p}-500`} transition-all outline-none text-sm`}
+                                className={`w-full pl-10 pr-4 py-2.5 rounded-lg border ${touched.phone && errors.phone ? 'border-red-500 bg-red-50 text-red-900' : `${isDarkMode ? `border-${g}-700 bg-${g}-950 text-white focus:bg-${g}-900` : `border-${g}-200 focus:bg-white text-${g}-900`} focus:border-${p}-500`} transition-all outline-none text-sm`}
                                 placeholder="70000000"
                                 maxLength={8}
                             />
@@ -172,9 +174,9 @@ const FormValidationDemo = ({ p, g }: { p: string, g: string }) => {
                     </div>
                     {/* Price (Numeric) */}
                     <div>
-                        <label className={`text-xs font-semibold text-${g}-500 uppercase tracking-wider`}>Precio</label>
+                        <label className={`text-xs font-semibold ${isDarkMode ? `text-${g}-400` : `text-${g}-500`} uppercase tracking-wider`}>Precio</label>
                         <div className="relative mt-1">
-                            <DollarSign className={`absolute left-3 top-3 size-4 text-${g}-400`} />
+                            <DollarSign className={`absolute left-3 top-3 size-4 ${isDarkMode ? `text-${g}-500` : `text-${g}-400`}`} />
                             <input 
                                 type="text" 
                                 value={form.price}
@@ -182,7 +184,7 @@ const FormValidationDemo = ({ p, g }: { p: string, g: string }) => {
                                     if (!isNaN(Number(e.target.value))) setForm({...form, price: e.target.value})
                                 }}
                                 onBlur={() => setTouched({...touched, price: true})}
-                                className={`w-full pl-10 pr-4 py-2.5 rounded-lg border ${touched.price && errors.price ? 'border-red-500 bg-red-50 text-red-900' : `border-${g}-200 focus:border-${p}-500`} transition-all outline-none text-sm`}
+                                className={`w-full pl-10 pr-4 py-2.5 rounded-lg border ${touched.price && errors.price ? 'border-red-500 bg-red-50 text-red-900' : `${isDarkMode ? `border-${g}-700 bg-${g}-950 text-white focus:bg-${g}-900` : `border-${g}-200 focus:bg-white text-${g}-900`} focus:border-${p}-500`} transition-all outline-none text-sm`}
                                 placeholder="0.00"
                             />
                         </div>
@@ -191,7 +193,7 @@ const FormValidationDemo = ({ p, g }: { p: string, g: string }) => {
 
                 <button 
                     disabled={!isFormValid}
-                    className={`w-full mt-4 py-3 rounded-xl font-bold text-sm transition-all ${isFormValid ? `bg-${p}-600 text-white shadow-lg shadow-${p}-500/30 hover:scale-[1.02]` : `bg-${g}-100 text-${g}-400 cursor-not-allowed`}`}
+                    className={`w-full mt-4 py-3 rounded-xl font-bold text-sm transition-all ${isFormValid ? `bg-${p}-600 text-white shadow-lg shadow-${p}-500/30 hover:scale-[1.02]` : `${isDarkMode ? `bg-${g}-800 text-${g}-600` : `bg-${g}-100 text-${g}-400`} cursor-not-allowed`}`}
                 >
                     {isFormValid ? "Enviar Formulario Seguro" : "Complete los campos"}
                 </button>
@@ -200,25 +202,25 @@ const FormValidationDemo = ({ p, g }: { p: string, g: string }) => {
 
         {/* Explanation */}
         <div className="flex flex-col justify-center space-y-4">
-            <div className={`p-5 rounded-2xl bg-${g}-50 border border-${g}-100 transition-all hover:shadow-md`}>
-                <h4 className={`font-bold text-${g}-900 mb-2 flex items-center gap-2 text-sm`}><CheckCircle2 className={`text-${p}-600 size-5`} /> Validación Client-side</h4>
-                <p className={`text-sm text-${g}-600`}>El botón de "Enviar" se bloquea si falta un campo. Feedback inmediato.</p>
+            <div className={`p-5 rounded-2xl ${isDarkMode ? `bg-${g}-800 border-${g}-700` : `bg-${g}-50 border-${g}-100`} border transition-all hover:shadow-md`}>
+                <h4 className={`font-bold ${isDarkMode ? 'text-white' : `text-${g}-900`} mb-2 flex items-center gap-2 text-sm`}><CheckCircle2 className={`text-${p}-600 size-5`} /> Validación Client-side</h4>
+                <p className={`text-sm ${isDarkMode ? `text-${g}-400` : `text-${g}-600`}`}>El botón de "Enviar" se bloquea si falta un campo. Feedback inmediato.</p>
             </div>
-            <div className={`p-5 rounded-2xl bg-${g}-50 border border-${g}-100 transition-all hover:shadow-md`}>
-                <h4 className={`font-bold text-${g}-900 mb-2 flex items-center gap-2 text-sm`}><ShieldCheck className={`text-${p}-600 size-5`} /> Tipos de datos obligatorios</h4>
-                <ul className={`text-sm text-${g}-600 space-y-1.5 list-none`}>
+            <div className={`p-5 rounded-2xl ${isDarkMode ? `bg-${g}-800 border-${g}-700` : `bg-${g}-50 border-${g}-100`} border transition-all hover:shadow-md`}>
+                <h4 className={`font-bold ${isDarkMode ? 'text-white' : `text-${g}-900`} mb-2 flex items-center gap-2 text-sm`}><ShieldCheck className={`text-${p}-600 size-5`} /> Tipos de datos obligatorios</h4>
+                <ul className={`text-sm ${isDarkMode ? `text-${g}-400` : `text-${g}-600`} space-y-1.5 list-none`}>
                     <li className="flex items-start gap-2"><div className={`mt-1.5 size-1.5 rounded-full bg-${p}-500`}></div><span><strong>Emails:</strong> Validación de formato (@ y dominio).</span></li>
                     <li className="flex items-start gap-2"><div className={`mt-1.5 size-1.5 rounded-full bg-${p}-500`}></div><span><strong>Passwords:</strong> Mín. 8 caracteres, mayúscula y número.</span></li>
                     <li className="flex items-start gap-2"><div className={`mt-1.5 size-1.5 rounded-full bg-${p}-500`}></div><span><strong>Numéricos:</strong> Evitar letras en precio/cantidad.</span></li>
                 </ul>
             </div>
-            <div className={`p-5 rounded-2xl bg-${g}-50 border border-${g}-100 transition-all hover:shadow-md`}>
-                <h4 className={`font-bold text-${g}-900 mb-2 flex items-center gap-2 text-sm`}><AlertTriangle className={`text-${p}-600 size-5`} /> Estados de Error Visual</h4>
-                <p className={`text-sm text-${g}-600`}>El borde del input se pone rojo y aparece un texto explicando el error.</p>
+            <div className={`p-5 rounded-2xl ${isDarkMode ? `bg-${g}-800 border-${g}-700` : `bg-${g}-50 border-${g}-100`} border transition-all hover:shadow-md`}>
+                <h4 className={`font-bold ${isDarkMode ? 'text-white' : `text-${g}-900`} mb-2 flex items-center gap-2 text-sm`}><AlertTriangle className={`text-${p}-600 size-5`} /> Estados de Error Visual</h4>
+                <p className={`text-sm ${isDarkMode ? `text-${g}-400` : `text-${g}-600`}`}>El borde del input se pone rojo y aparece un texto explicando el error.</p>
             </div>
-            <div className={`p-5 rounded-2xl bg-${g}-50 border border-${g}-100 transition-all hover:shadow-md`}>
-                <h4 className={`font-bold text-${g}-900 mb-2 flex items-center gap-2 text-sm`}><Zap className={`text-${p}-600 size-5`} /> Máscaras de Entrada</h4>
-                <p className={`text-sm text-${g}-600`}>Control de entrada numérico para Bolivia (8 dígitos), ej: <code>77777777</code>.</p>
+            <div className={`p-5 rounded-2xl ${isDarkMode ? `bg-${g}-800 border-${g}-700` : `bg-${g}-50 border-${g}-100`} border transition-all hover:shadow-md`}>
+                <h4 className={`font-bold ${isDarkMode ? 'text-white' : `text-${g}-900`} mb-2 flex items-center gap-2 text-sm`}><Zap className={`text-${p}-600 size-5`} /> Máscaras de Entrada</h4>
+                <p className={`text-sm ${isDarkMode ? `text-${g}-400` : `text-${g}-600`}`}>Control de entrada numérico para Bolivia (8 dígitos), ej: <code>77777777</code>.</p>
             </div>
         </div>
     </div>
@@ -228,6 +230,7 @@ const FormValidationDemo = ({ p, g }: { p: string, g: string }) => {
 const PropuestaTecnica = () => {
   const [font, setFont] = useState('font-inter');
   const [currentTheme, setCurrentTheme] = useState<ThemeKey>('blue');
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Helpers para clases dinámicas
   const theme = THEMES[currentTheme];
@@ -290,9 +293,9 @@ const PropuestaTecnica = () => {
   ];
 
   return (
-    <div className={`${font === 'font-inter' ? inter.className : montserrat.className} min-h-screen bg-${g}-50 text-${g}-900 transition-colors duration-300 relative`}>
+    <div className={`${font === 'font-inter' ? inter.className : montserrat.className} min-h-screen ${isDarkMode ? `bg-${g}-950 text-${g}-100` : `bg-[#F4F0EC] text-${g}-900`} transition-colors duration-300 relative`}>
       {/* Navbar con estilo idéntico a la Home */}
-      <nav className={`sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-${g}-200 transition-colors duration-300`}>
+      <nav className={`sticky top-0 z-50 ${isDarkMode ? `bg-${g}-950/80 border-${g}-800` : `bg-[#F4F0EC]/80 border-${g}-200`} backdrop-blur-md border-b transition-colors duration-300`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo con Link al Home */}
@@ -300,25 +303,25 @@ const PropuestaTecnica = () => {
               <div className={`bg-${p}-600 p-2 rounded-lg group-hover:bg-${p}-700 transition-colors`}>
                 <Building2 className="w-6 h-6 text-white" />
               </div>
-              <span className={`text-xl font-bold text-${g}-900 ${montserrat.className}`}>
+              <span className={`text-xl font-bold ${isDarkMode ? 'text-white' : `text-${g}-900`} ${montserrat.className}`}>
                 Byte<span className={`text-${p}-600`}>Mafia</span>
               </span>
             </Link>
 
             <div className="hidden md:flex items-center gap-8">
-              <Link href="/" className={`text-${g}-600 hover:text-${p}-600 font-medium transition-colors`}>Inicio</Link>
-              <div className={`flex items-center gap-4 border-l border-${g}-200 ml-4 pl-4`}>
-                <button className={`p-2 text-${g}-400 hover:text-${p}-600 transition-colors`}>
+              <Link href="/" className={`${isDarkMode ? `text-${g}-300 hover:text-${p}-400` : `text-${g}-600 hover:text-${p}-600`} font-medium transition-colors`}>Inicio</Link>
+              <div className={`flex items-center gap-4 border-l ${isDarkMode ? `border-${g}-800` : `border-${g}-200`} ml-4 pl-4`}>
+                <button className={`p-2 ${isDarkMode ? `text-${g}-400 hover:text-${p}-400` : `text-${g}-400 hover:text-${p}-600`} transition-colors`}>
                   <Bell className="w-5 h-5" />
                 </button>
-                <button className={`flex items-center gap-2 p-1 pr-3 rounded-full bg-${g}-100 hover:bg-${g}-200 transition-colors`}>
-                  <UserCircle className={`w-8 h-8 text-${g}-500`} />
-                  <span className={`text-sm font-medium text-${g}-700`}>Cuenta</span>
+                <button className={`flex items-center gap-2 p-1 pr-3 rounded-full ${isDarkMode ? `bg-${g}-900 hover:bg-${g}-800` : `bg-${g}-100 hover:bg-${g}-200`} transition-colors`}>
+                  <UserCircle className={`w-8 h-8 ${isDarkMode ? `text-${g}-400` : `text-${g}-500`}`} />
+                  <span className={`text-sm font-medium ${isDarkMode ? `text-${g}-300` : `text-${g}-700`}`}>Cuenta</span>
                 </button>
               </div>
             </div>
 
-            <button className={`md:hidden p-2 text-${g}-600`}>
+            <button className={`md:hidden p-2 ${isDarkMode ? `text-${g}-400` : `text-${g}-600`}`}>
               <Menu className="w-6 h-6" />
             </button>
           </div>
@@ -326,14 +329,14 @@ const PropuestaTecnica = () => {
       </nav>
 
       {/* BARRA DE CONTROL DE DEMO (Idéntica al Home) */}
-      <div className={`bg-white text-${g}-500 py-2 text-center text-xs border-b border-${g}-200 transition-colors duration-500 sticky top-16 z-40`}>
+      <div className={`${isDarkMode ? `bg-${g}-900 text-${g}-400 border-${g}-800` : `bg-white text-${g}-500 border-${g}-200`} py-2 text-center text-xs border-b transition-colors duration-500 sticky top-16 z-40`}>
           <div className="flex justify-center gap-6 items-center flex-wrap px-4">
             {/* Selector de Fuente */}
             <div className="flex items-center gap-2">
                 <Wand2 className="size-3" />
                 <span className="opacity-80 font-mono">FUENTE:</span>
-                <button onClick={() => setFont('font-montserrat')} className={`px-3 py-0.5 rounded transition-colors ${font === 'font-montserrat' ? `bg-${p}-600 text-white` : `hover:bg-${g}-100`}`}>Montserrat</button>
-                <button onClick={() => setFont('font-inter')} className={`px-3 py-0.5 rounded transition-colors ${font === 'font-inter' ? `bg-${p}-600 text-white` : `hover:bg-${g}-100`}`}>Inter</button>
+                <button onClick={() => setFont('font-montserrat')} className={`px-3 py-0.5 rounded transition-colors ${font === 'font-montserrat' ? `bg-${p}-600 text-white` : `hover:bg-${g}-100 ${isDarkMode ? `hover:bg-${g}-800` : ''}`}`}>Montserrat</button>
+                <button onClick={() => setFont('font-inter')} className={`px-3 py-0.5 rounded transition-colors ${font === 'font-inter' ? `bg-${p}-600 text-white` : `hover:bg-${g}-100 ${isDarkMode ? `hover:bg-${g}-800` : ''}`}`}>Inter</button>
             </div>
             <div className={`w-px h-4 bg-${g}-200 hidden sm:block`}></div>
             {/* Selector de Tema */}
@@ -354,6 +357,15 @@ const PropuestaTecnica = () => {
                     ))}
                 </div>
             </div>
+            
+            <div className={`w-px h-4 bg-${g}-200 hidden sm:block`}></div>
+
+            {/* Selector de Modo Oscuro */}
+            <button onClick={() => setIsDarkMode(!isDarkMode)} className={`flex items-center gap-2 px-3 py-0.5 rounded-full transition-all ${isDarkMode ? `bg-${g}-800 text-white ring-1 ring-${g}-700` : `bg-${g}-100 text-${g}-600 hover:bg-${g}-200`}`}>
+                {isDarkMode ? <Moon className="size-3" /> : <Sun className="size-3 text-amber-500" />}
+                <span className="font-bold tracking-wide text-[10px]">{isDarkMode ? 'OSCURO' : 'CLARO'}</span>
+            </button>
+
           </div>
       </div>
 
@@ -363,10 +375,10 @@ const PropuestaTecnica = () => {
             <Cpu className="w-4 h-4" />
             <span className="text-sm font-semibold uppercase tracking-wider">Arquitectura de Software</span>
           </div>
-          <h1 className={`${montserrat.className} text-4xl font-extrabold text-${g}-900 mb-4`}>
+          <h1 className={`${montserrat.className} text-4xl font-extrabold ${isDarkMode ? 'text-white' : `text-${g}-900`} mb-4`}>
             Propuesta Técnica
           </h1>
-          <p className={`text-xl text-${g}-600 max-w-2xl mx-auto`}>
+          <p className={`text-xl ${isDarkMode ? `text-${g}-400` : `text-${g}-600`} max-w-2xl mx-auto`}>
             Stack tecnológico seleccionado para garantizar escalabilidad, velocidad y seguridad.
           </p>
         </header>
@@ -376,17 +388,17 @@ const PropuestaTecnica = () => {
           {techStack.map((tech, index) => (
             <div 
               key={index} 
-              className={`group bg-white p-8 rounded-2xl shadow-sm border border-${g}-100 hover:border-${p}-200 hover:shadow-xl hover:shadow-${p}-500/5 transition-all duration-300`}
+              className={`group ${isDarkMode ? `bg-${g}-900 border-${g}-800` : `bg-white border-${g}-100`} p-8 rounded-2xl shadow-sm border hover:border-${p}-200 hover:shadow-xl hover:shadow-${p}-500/5 transition-all duration-300`}
             >
               <div className="flex items-center gap-4 mb-5">
-                <div className={`p-3 rounded-xl bg-${g}-50 group-hover:bg-white transition-colors duration-300`}>
+                <div className={`p-3 rounded-xl ${isDarkMode ? `bg-${g}-800` : `bg-${g}-50`} group-hover:bg-white transition-colors duration-300`}>
                   {tech.icon}
                 </div>
-                <h3 className={`${montserrat.className} text-xl font-bold text-${g}-800`}>
+                <h3 className={`${montserrat.className} text-xl font-bold ${isDarkMode ? 'text-white' : `text-${g}-800`}`}>
                   {tech.title}
                 </h3>
               </div>
-              <p className={`text-${g}-600 leading-relaxed text-lg`}>
+              <p className={`${isDarkMode ? `text-${g}-400` : `text-${g}-600`} leading-relaxed text-lg`}>
                 {tech.justification}
               </p>
             </div>
@@ -399,10 +411,10 @@ const PropuestaTecnica = () => {
               <Wrench className="w-4 h-4" />
               <span className="text-sm font-semibold uppercase tracking-wider">Componentes de UX y Feedback</span>
             </div>
-            <h2 className={`${montserrat.className} text-3xl font-extrabold text-${g}-900 mb-3`}>
+            <h2 className={`${montserrat.className} text-3xl font-extrabold ${isDarkMode ? 'text-white' : `text-${g}-900`} mb-3`}>
               Estados de Feedback y Navegación
             </h2>
-            <p className={`text-lg text-${g}-600 max-w-3xl mx-auto`}>
+            <p className={`text-lg ${isDarkMode ? `text-${g}-400` : `text-${g}-600`} max-w-3xl mx-auto`}>
               Ejemplos visuales de componentes cruciales para una experiencia de usuario profesional y robusta.
             </p>
           </header>
@@ -410,11 +422,11 @@ const PropuestaTecnica = () => {
           <div className="space-y-12">
             {/* 1. Breadcrumbs */}
             <div>
-              <h3 className={`text-xl font-bold text-${g}-800 mb-4`}>Breadcrumbs (Migas de pan)</h3>
-              <div className={`bg-white p-6 rounded-xl border border-${g}-200 shadow-sm`}>
-                <p className={`text-sm text-${g}-600 mb-4`}>Útiles si la navegación se vuelve profunda (ej: Inicio &gt; Propiedades &gt; Detalles).</p>
-                <nav aria-label="Breadcrumb" className={`bg-${g}-50 p-4 rounded-lg`}>
-                  <ol className={`flex items-center gap-2 text-sm text-${g}-500`}>
+              <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : `text-${g}-800`} mb-4`}>Breadcrumbs (Migas de pan)</h3>
+              <div className={`${isDarkMode ? `bg-${g}-900 border-${g}-800` : `bg-white border-${g}-200`} p-6 rounded-xl border shadow-sm`}>
+                <p className={`text-sm ${isDarkMode ? `text-${g}-400` : `text-${g}-600`} mb-4`}>Útiles si la navegación se vuelve profunda (ej: Inicio &gt; Propiedades &gt; Detalles).</p>
+                <nav aria-label="Breadcrumb" className={`${isDarkMode ? `bg-${g}-950` : `bg-${g}-50`} p-4 rounded-lg`}>
+                  <ol className={`flex items-center gap-2 text-sm ${isDarkMode ? `text-${g}-400` : `text-${g}-500`}`}>
                     <li>
                       <a href="#" className={`flex items-center gap-1.5 hover:text-${p}-600 hover:underline`}>
                         <Home className="w-4 h-4" />
@@ -422,13 +434,13 @@ const PropuestaTecnica = () => {
                       </a>
                     </li>
                     <li>
-                      <ChevronRight className={`w-4 h-4 text-${g}-400`} />
+                      <ChevronRight className={`w-4 h-4 ${isDarkMode ? `text-${g}-600` : `text-${g}-400`}`} />
                     </li>
                     <li>
                       <a href="#" className={`hover:text-${p}-600 hover:underline`}>Propiedades</a>
                     </li>
                     <li>
-                      <ChevronRight className={`w-4 h-4 text-${g}-400`} />
+                      <ChevronRight className={`w-4 h-4 ${isDarkMode ? `text-${g}-600` : `text-${g}-400`}`} />
                     </li>
                     <li className={`font-semibold text-${p}-600 truncate`} aria-current="page">
                       Residencia Moderna en Cala Cala
@@ -440,18 +452,18 @@ const PropuestaTecnica = () => {
 
             {/* 2. Loading States (Skeletons) */}
             <div>
-              <h3 className={`text-xl font-bold text-${g}-800 mb-4`}>Loading States (Skeletons)</h3>
-              <div className={`bg-white p-6 rounded-xl border border-${g}-200 shadow-sm`}>
-                <p className={`text-sm text-${g}-600 mb-4`}>Muestran una silueta del contenido mientras cargan los datos, mejorando la percepción de velocidad.</p>
+              <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : `text-${g}-800`} mb-4`}>Loading States (Skeletons)</h3>
+              <div className={`${isDarkMode ? `bg-${g}-900 border-${g}-800` : `bg-white border-${g}-200`} p-6 rounded-xl border shadow-sm`}>
+                <p className={`text-sm ${isDarkMode ? `text-${g}-400` : `text-${g}-600`} mb-4`}>Muestran una silueta del contenido mientras cargan los datos, mejorando la percepción de velocidad.</p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {[1, 2, 3].map(i => (
-                    <div key={i} className={`rounded-lg border border-${g}-200 bg-white p-4 space-y-4`}>
-                      <div className={`w-full h-32 bg-${g}-200 rounded-md animate-pulse`}></div>
+                    <div key={i} className={`rounded-lg border ${isDarkMode ? `border-${g}-800 bg-${g}-950` : `border-${g}-200 bg-white`} p-4 space-y-4`}>
+                      <div className={`w-full h-32 ${isDarkMode ? `bg-${g}-800` : `bg-${g}-200`} rounded-md animate-pulse`}></div>
                       <div className="space-y-3">
-                        <div className={`h-5 bg-${g}-200 rounded w-3/4 animate-pulse`}></div>
-                        <div className={`h-4 bg-${g}-200 rounded w-1/2 animate-pulse`}></div>
+                        <div className={`h-5 ${isDarkMode ? `bg-${g}-800` : `bg-${g}-200`} rounded w-3/4 animate-pulse`}></div>
+                        <div className={`h-4 ${isDarkMode ? `bg-${g}-800` : `bg-${g}-200`} rounded w-1/2 animate-pulse`}></div>
                       </div>
-                      <div className={`h-8 bg-${g}-200 rounded w-1/3 animate-pulse mt-4`}></div>
+                      <div className={`h-8 ${isDarkMode ? `bg-${g}-800` : `bg-${g}-200`} rounded w-1/3 animate-pulse mt-4`}></div>
                     </div>
                   ))}
                 </div>
@@ -461,12 +473,12 @@ const PropuestaTecnica = () => {
             {/* 3. 404 y 500 Pages */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="flex flex-col">
-                <h3 className={`text-xl font-bold text-${g}-800 mb-4`}>Página 404 Personalizada</h3>
-                <div className={`bg-white p-8 rounded-xl border border-${g}-200 h-full flex-grow shadow-sm`}>
+                <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : `text-${g}-800`} mb-4`}>Página 404 Personalizada</h3>
+                <div className={`${isDarkMode ? `bg-${g}-900 border-${g}-800` : `bg-white border-${g}-200`} p-8 rounded-xl border h-full flex-grow shadow-sm`}>
                   <div className="text-center flex flex-col justify-center items-center h-full">
                     <FileQuestion className={`w-16 h-16 text-${p}-400 mb-4`} strokeWidth={1.5}/>
-                    <h4 className={`${montserrat.className} text-2xl font-bold text-${g}-800`}>Error 404</h4>
-                    <p className={`text-${g}-500 mb-6 mt-1`}>La página que buscas no existe o fue movida.</p>
+                    <h4 className={`${montserrat.className} text-2xl font-bold ${isDarkMode ? 'text-white' : `text-${g}-800`}`}>Error 404</h4>
+                    <p className={`${isDarkMode ? `text-${g}-400` : `text-${g}-500`} mb-6 mt-1`}>La página que buscas no existe o fue movida.</p>
                     <button className={`bg-${p}-600 text-white font-semibold px-6 py-2.5 rounded-lg hover:bg-${p}-700 transition-colors shadow-sm`}>
                       Volver al Inicio
                     </button>
@@ -474,13 +486,13 @@ const PropuestaTecnica = () => {
                 </div>
               </div>
               <div className="flex flex-col">
-                <h3 className={`text-xl font-bold text-${g}-800 mb-4`}>Página 500 (Server Error)</h3>
-                <div className={`bg-white p-8 rounded-xl border border-${g}-200 h-full flex-grow shadow-sm`}>
+                <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : `text-${g}-800`} mb-4`}>Página 500 (Server Error)</h3>
+                <div className={`${isDarkMode ? `bg-${g}-900 border-${g}-800` : `bg-white border-${g}-200`} p-8 rounded-xl border h-full flex-grow shadow-sm`}>
                   <div className="text-center flex flex-col justify-center items-center h-full">
                     <ServerCrash className="w-16 h-16 text-rose-400 mb-4" strokeWidth={1.5}/>
-                    <h4 className={`${montserrat.className} text-2xl font-bold text-${g}-800`}>Error 500</h4>
-                    <p className={`text-${g}-500 mb-6 mt-1`}>Algo falló en nuestros servidores. Inténtalo de nuevo más tarde.</p>
-                    <button className={`bg-${g}-700 text-white font-semibold px-6 py-2.5 rounded-lg hover:bg-${g}-800 transition-colors shadow-sm`}>
+                    <h4 className={`${montserrat.className} text-2xl font-bold ${isDarkMode ? 'text-white' : `text-${g}-800`}`}>Error 500</h4>
+                    <p className={`${isDarkMode ? `text-${g}-400` : `text-${g}-500`} mb-6 mt-1`}>Algo falló en nuestros servidores. Inténtalo de nuevo más tarde.</p>
+                    <button className={`${isDarkMode ? `bg-${g}-800 hover:bg-${g}-700` : `bg-${g}-700 hover:bg-${g}-800`} text-white font-semibold px-6 py-2.5 rounded-lg transition-colors shadow-sm`}>
                       Reintentar
                     </button>
                   </div>
@@ -489,46 +501,46 @@ const PropuestaTecnica = () => {
             </div>
 
             {/* 4. Navegación por Facetas */}
-            <div className={`bg-white p-8 rounded-xl border border-${g}-200 shadow-sm`}>
-                <h3 className={`text-xl font-bold text-${g}-800 mb-6 flex items-center gap-2`}>
+            <div className={`${isDarkMode ? `bg-${g}-900 border-${g}-800` : `bg-white border-${g}-200`} p-8 rounded-xl border shadow-sm`}>
+                <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : `text-${g}-800`} mb-6 flex items-center gap-2`}>
                     <Filter className={`text-${p}-600 size-5`} /> Navegación por Facetas (Filtros)
                 </h3>
                 <div className="flex flex-col md:flex-row gap-8">
                     {/* Sidebar Mockup */}
-                    <div className={`w-full md:w-64 flex-shrink-0 border border-${g}-200 rounded-xl p-5 bg-${g}-50/50`}>
+                    <div className={`w-full md:w-64 flex-shrink-0 border ${isDarkMode ? `border-${g}-700 bg-${g}-950/50` : `border-${g}-200 bg-${g}-50/50`} rounded-xl p-5`}>
                         <div className="flex justify-between items-center mb-6">
-                            <span className={`font-bold text-${g}-900 text-sm`}>Filtros</span>
+                            <span className={`font-bold ${isDarkMode ? 'text-white' : `text-${g}-900`} text-sm`}>Filtros</span>
                             <button className={`text-${p}-600 text-xs font-medium hover:underline`}>Limpiar todo</button>
                         </div>
                         
                         {/* Filter Group: Tipo */}
                         <div className="mb-6">
-                            <p className={`text-xs font-bold text-${g}-500 uppercase tracking-wider mb-3`}>Tipo de Propiedad</p>
+                            <p className={`text-xs font-bold ${isDarkMode ? `text-${g}-400` : `text-${g}-500`} uppercase tracking-wider mb-3`}>Tipo de Propiedad</p>
                             <div className="space-y-2.5">
                                 <label className="flex items-center gap-2.5 text-sm cursor-pointer group">
-                                    <div className={`size-4 rounded border border-${g}-300 bg-white flex items-center justify-center group-hover:border-${p}-500 transition-colors`}>
+                                    <div className={`size-4 rounded border ${isDarkMode ? `border-${g}-600 bg-${g}-800` : `border-${g}-300 bg-white`} flex items-center justify-center group-hover:border-${p}-500 transition-colors`}>
                                         <div className={`size-2.5 rounded-sm bg-${p}-600`}></div>
                                     </div>
-                                    <span className={`text-${g}-700 font-medium`}>Casas</span>
-                                    <span className={`text-${g}-400 text-xs ml-auto`}>124</span>
+                                    <span className={`${isDarkMode ? `text-${g}-300` : `text-${g}-700`} font-medium`}>Casas</span>
+                                    <span className={`${isDarkMode ? `text-${g}-500` : `text-${g}-400`} text-xs ml-auto`}>124</span>
                                 </label>
                                 <label className="flex items-center gap-2.5 text-sm cursor-pointer group">
-                                    <div className={`size-4 rounded border border-${g}-300 bg-white flex items-center justify-center group-hover:border-${p}-500 transition-colors`}></div>
-                                    <span className={`text-${g}-600 group-hover:text-${g}-900`}>Departamentos</span>
-                                    <span className={`text-${g}-400 text-xs ml-auto`}>85</span>
+                                    <div className={`size-4 rounded border ${isDarkMode ? `border-${g}-600 bg-${g}-800` : `border-${g}-300 bg-white`} flex items-center justify-center group-hover:border-${p}-500 transition-colors`}></div>
+                                    <span className={`${isDarkMode ? `text-${g}-400 group-hover:text-${g}-200` : `text-${g}-600 group-hover:text-${g}-900`}`}>Departamentos</span>
+                                    <span className={`${isDarkMode ? `text-${g}-500` : `text-${g}-400`} text-xs ml-auto`}>85</span>
                                 </label>
                             </div>
                         </div>
 
                         {/* Filter Group: Precio */}
                         <div className="mb-2">
-                            <p className={`text-xs font-bold text-${g}-500 uppercase tracking-wider mb-3`}>Rango de Precio</p>
+                            <p className={`text-xs font-bold ${isDarkMode ? `text-${g}-400` : `text-${g}-500`} uppercase tracking-wider mb-3`}>Rango de Precio</p>
                             <div className="flex items-center gap-2 mb-4">
-                                <div className={`flex-1 bg-white border border-${g}-200 rounded px-2 py-1 text-xs text-${g}-600`}>$50k</div>
-                                <span className={`text-${g}-400`}>-</span>
-                                <div className={`flex-1 bg-white border border-${g}-200 rounded px-2 py-1 text-xs text-${g}-600`}>$450k</div>
+                                <div className={`flex-1 ${isDarkMode ? `bg-${g}-800 border-${g}-700 text-${g}-300` : `bg-white border-${g}-200 text-${g}-600`} border rounded px-2 py-1 text-xs`}>$50k</div>
+                                <span className={`${isDarkMode ? `text-${g}-500` : `text-${g}-400`}`}>-</span>
+                                <div className={`flex-1 ${isDarkMode ? `bg-${g}-800 border-${g}-700 text-${g}-300` : `bg-white border-${g}-200 text-${g}-600`} border rounded px-2 py-1 text-xs`}>$450k</div>
                             </div>
-                            <div className={`h-1.5 bg-${g}-200 rounded-full relative`}>
+                            <div className={`h-1.5 ${isDarkMode ? `bg-${g}-700` : `bg-${g}-200`} rounded-full relative`}>
                                 <div className={`absolute left-0 right-1/3 top-0 bottom-0 bg-${p}-500 rounded-full`}></div>
                                 <div className={`absolute right-1/3 top-1/2 -translate-y-1/2 size-3 bg-white border-2 border-${p}-500 rounded-full shadow-sm cursor-pointer`}></div>
                             </div>
@@ -539,20 +551,20 @@ const PropuestaTecnica = () => {
                     <div className="flex-1 flex flex-col gap-4">
                         {/* Active Tags */}
                         <div className="flex items-center gap-2 flex-wrap">
-                            <span className={`text-sm text-${g}-500 mr-2`}>Activos:</span>
-                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-${p}-50 text-${p}-700 text-xs font-medium border border-${p}-100`}>
+                            <span className={`text-sm ${isDarkMode ? `text-${g}-400` : `text-${g}-500`} mr-2`}>Activos:</span>
+                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full ${isDarkMode ? `bg-${p}-900/30 text-${p}-300 border-${p}-800` : `bg-${p}-50 text-${p}-700 border-${p}-100`} text-xs font-medium border`}>
                                 Casas <button className={`hover:bg-${p}-200 rounded-full p-0.5`}><X className="size-3" /></button>
                             </span>
-                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-${p}-50 text-${p}-700 text-xs font-medium border border-${p}-100`}>
+                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full ${isDarkMode ? `bg-${p}-900/30 text-${p}-300 border-${p}-800` : `bg-${p}-50 text-${p}-700 border-${p}-100`} text-xs font-medium border`}>
                                 $50k - $450k <button className={`hover:bg-${p}-200 rounded-full p-0.5`}><X className="size-3" /></button>
                             </span>
                         </div>
                         
                         {/* Skeleton Results */}
-                        <div className={`flex-1 border-2 border-dashed border-${g}-100 rounded-xl bg-${g}-50/30 flex items-center justify-center min-h-[200px]`}>
+                        <div className={`flex-1 border-2 border-dashed ${isDarkMode ? `border-${g}-800 bg-${g}-900/20` : `border-${g}-100 bg-${g}-50/30`} rounded-xl flex items-center justify-center min-h-[200px]`}>
                             <div className="text-center p-6">
-                                <Search className={`size-8 text-${g}-300 mx-auto mb-2`} />
-                                <p className={`text-${g}-500 text-sm`}>La lista de propiedades se actualiza automáticamente al filtrar.</p>
+                                <Search className={`size-8 ${isDarkMode ? `text-${g}-700` : `text-${g}-300`} mx-auto mb-2`} />
+                                <p className={`${isDarkMode ? `text-${g}-500` : `text-${g}-500`} text-sm`}>La lista de propiedades se actualiza automáticamente al filtrar.</p>
                             </div>
                         </div>
                     </div>
@@ -568,10 +580,10 @@ const PropuestaTecnica = () => {
               <AppWindow className="w-4 h-4" />
               <span className="text-sm font-semibold uppercase tracking-wider">Interactividad Avanzada</span>
             </div>
-            <h2 className={`${montserrat.className} text-3xl font-extrabold text-${g}-900 mb-3`}>
+            <h2 className={`${montserrat.className} text-3xl font-extrabold ${isDarkMode ? 'text-white' : `text-${g}-900`} mb-3`}>
               Componentes de Interacción
             </h2>
-            <p className={`text-lg text-${g}-600 max-w-3xl mx-auto`}>
+            <p className={`text-lg ${isDarkMode ? `text-${g}-400` : `text-${g}-600`} max-w-3xl mx-auto`}>
               Elementos que enriquecen la experiencia del usuario proporcionando contexto, control y retroalimentación inmediata.
             </p>
           </header>
@@ -579,31 +591,31 @@ const PropuestaTecnica = () => {
           <div className="space-y-12">
             {/* 1. Modales y Drawers */}
             <div className="grid md:grid-cols-2 gap-8">
-              <div className={`bg-white p-6 rounded-xl border border-${g}-200 shadow-sm relative overflow-hidden h-64`}>
-                <h3 className={`text-xl font-bold text-${g}-800 mb-4`}>Modales (Confirmaciones)</h3>
+              <div className={`${isDarkMode ? `bg-${g}-900 border-${g}-800` : `bg-white border-${g}-200`} p-6 rounded-xl border shadow-sm relative overflow-hidden h-64`}>
+                <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : `text-${g}-800`} mb-4`}>Modales (Confirmaciones)</h3>
                 <div className={`bg-${g}-900/50 absolute inset-0 flex items-center justify-center p-4 backdrop-blur-sm`}>
-                  <div className="bg-white rounded-lg shadow-2xl p-6 max-w-sm w-full transform scale-100">
-                    <h4 className={`text-lg font-bold text-${g}-900 mb-2`}>¿Eliminar propiedad?</h4>
-                    <p className={`text-${g}-500 mb-4 text-sm`}>Esta acción no se puede deshacer. Todos los datos asociados se perderán.</p>
+                  <div className={`${isDarkMode ? `bg-${g}-800` : `bg-white`} rounded-lg shadow-2xl p-6 max-w-sm w-full transform scale-100`}>
+                    <h4 className={`text-lg font-bold ${isDarkMode ? 'text-white' : `text-${g}-900`} mb-2`}>¿Eliminar propiedad?</h4>
+                    <p className={`${isDarkMode ? `text-${g}-400` : `text-${g}-500`} mb-4 text-sm`}>Esta acción no se puede deshacer. Todos los datos asociados se perderán.</p>
                     <div className="flex justify-end gap-2">
-                      <button className={`px-3 py-1.5 rounded-lg text-${g}-600 hover:bg-${g}-100 text-sm font-medium`}>Cancelar</button>
+                      <button className={`px-3 py-1.5 rounded-lg ${isDarkMode ? `text-${g}-300 hover:bg-${g}-700` : `text-${g}-600 hover:bg-${g}-100`} text-sm font-medium`}>Cancelar</button>
                       <button className="px-3 py-1.5 rounded-lg bg-red-600 text-white hover:bg-red-700 text-sm font-medium">Eliminar</button>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className={`bg-white p-6 rounded-xl border border-${g}-200 shadow-sm relative overflow-hidden h-64`}>
-                <h3 className={`text-xl font-bold text-${g}-800 mb-4`}>Drawers (Menús Laterales)</h3>
-                <div className={`absolute top-0 right-0 h-full w-64 bg-white shadow-2xl border-l border-${g}-100 p-4 transform translate-x-0`}>
+              <div className={`${isDarkMode ? `bg-${g}-900 border-${g}-800` : `bg-white border-${g}-200`} p-6 rounded-xl border shadow-sm relative overflow-hidden h-64`}>
+                <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : `text-${g}-800`} mb-4`}>Drawers (Menús Laterales)</h3>
+                <div className={`absolute top-0 right-0 h-full w-64 ${isDarkMode ? `bg-${g}-800 border-${g}-700` : `bg-white border-${g}-100`} shadow-2xl border-l p-4 transform translate-x-0`}>
                   <div className="flex justify-between items-center mb-6">
-                    <span className={`font-bold text-${g}-900`}>Filtros</span>
-                    <button className={`p-1 hover:bg-${g}-100 rounded`}><X className={`w-4 h-4 text-${g}-500`} /></button>
+                    <span className={`font-bold ${isDarkMode ? 'text-white' : `text-${g}-900`}`}>Filtros</span>
+                    <button className={`p-1 hover:bg-${g}-100 rounded`}><X className={`w-4 h-4 ${isDarkMode ? `text-${g}-400` : `text-${g}-500`}`} /></button>
                   </div>
                   <div className="space-y-4">
-                    <div className={`h-2 bg-${g}-100 rounded w-full`}></div>
-                    <div className={`h-2 bg-${g}-100 rounded w-3/4`}></div>
-                    <div className={`h-2 bg-${g}-100 rounded w-1/2`}></div>
+                    <div className={`h-2 ${isDarkMode ? `bg-${g}-700` : `bg-${g}-100`} rounded w-full`}></div>
+                    <div className={`h-2 ${isDarkMode ? `bg-${g}-700` : `bg-${g}-100`} rounded w-3/4`}></div>
+                    <div className={`h-2 ${isDarkMode ? `bg-${g}-700` : `bg-${g}-100`} rounded w-1/2`}></div>
                   </div>
                   <button className={`w-full mt-8 bg-${p}-600 text-white py-2 rounded-lg text-sm`}>Aplicar</button>
                 </div>
@@ -613,35 +625,35 @@ const PropuestaTecnica = () => {
             {/* 2. Toasts & Tooltips */}
             <div className="grid md:grid-cols-2 gap-8">
               <div>
-                <h3 className={`text-xl font-bold text-${g}-800 mb-4`}>Toasts (Notificaciones)</h3>
-                <div className={`bg-${g}-50 p-8 rounded-xl border border-${g}-200 flex flex-col gap-4 items-center justify-center h-full min-h-[200px]`}>
-                  <div className="bg-white px-4 py-3 rounded-lg shadow-lg border-l-4 border-green-500 flex items-center gap-3 w-full max-w-sm">
+                <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : `text-${g}-800`} mb-4`}>Toasts (Notificaciones)</h3>
+                <div className={`${isDarkMode ? `bg-${g}-900 border-${g}-800` : `bg-${g}-50 border-${g}-200`} p-8 rounded-xl border flex flex-col gap-4 items-center justify-center h-full min-h-[200px]`}>
+                  <div className={`${isDarkMode ? `bg-${g}-800 text-white` : `bg-white text-${g}-900`} px-4 py-3 rounded-lg shadow-lg border-l-4 border-green-500 flex items-center gap-3 w-full max-w-sm`}>
                     <CheckCircle className="w-5 h-5 text-green-500" />
                     <div>
-                      <p className={`text-sm font-medium text-${g}-900`}>Éxito</p>
-                      <p className={`text-xs text-${g}-500`}>Formulario enviado correctamente.</p>
+                      <p className="text-sm font-medium">Éxito</p>
+                      <p className={`text-xs ${isDarkMode ? `text-${g}-400` : `text-${g}-500`}`}>Formulario enviado correctamente.</p>
                     </div>
                   </div>
-                  <div className="bg-white px-4 py-3 rounded-lg shadow-lg border-l-4 border-red-500 flex items-center gap-3 w-full max-w-sm">
+                  <div className={`${isDarkMode ? `bg-${g}-800 text-white` : `bg-white text-${g}-900`} px-4 py-3 rounded-lg shadow-lg border-l-4 border-red-500 flex items-center gap-3 w-full max-w-sm`}>
                     <AlertTriangle className="w-5 h-5 text-red-500" />
                     <div>
-                      <p className={`text-sm font-medium text-${g}-900`}>Error</p>
-                      <p className={`text-xs text-${g}-500`}>No se pudo cargar la imagen.</p>
+                      <p className="text-sm font-medium">Error</p>
+                      <p className={`text-xs ${isDarkMode ? `text-${g}-400` : `text-${g}-500`}`}>No se pudo cargar la imagen.</p>
                     </div>
                   </div>
                 </div>
               </div>
 
               <div>
-                <h3 className={`text-xl font-bold text-${g}-800 mb-4`}>Tooltips (Ayuda Contextual)</h3>
-                <div className={`bg-white p-8 rounded-xl border border-${g}-200 flex items-center justify-center h-full min-h-[200px]`}>
+                <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : `text-${g}-800`} mb-4`}>Tooltips (Ayuda Contextual)</h3>
+                <div className={`${isDarkMode ? `bg-${g}-900 border-${g}-800` : `bg-white border-${g}-200`} p-8 rounded-xl border flex items-center justify-center h-full min-h-[200px]`}>
                   <div className="relative group">
-                    <button className={`p-3 rounded-full bg-${g}-100 hover:bg-${g}-200 transition-colors`}>
-                      <HelpCircle className={`w-6 h-6 text-${g}-600`} />
+                    <button className={`p-3 rounded-full ${isDarkMode ? `bg-${g}-800 hover:bg-${g}-700` : `bg-${g}-100 hover:bg-${g}-200`} transition-colors`}>
+                      <HelpCircle className={`w-6 h-6 ${isDarkMode ? `text-${g}-400` : `text-${g}-600`}`} />
                     </button>
-                    <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-${g}-900 text-white text-xs rounded-md whitespace-nowrap opacity-100 transition-opacity`}>
+                    <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 ${isDarkMode ? `bg-white text-${g}-900` : `bg-${g}-900 text-white`} text-xs rounded-md whitespace-nowrap opacity-100 transition-opacity`}>
                       Más información aquí
-                      <div className={`absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-${g}-900`}></div>
+                      <div className={`absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent ${isDarkMode ? `border-t-white` : `border-t-${g}-900`}`}></div>
                     </div>
                   </div>
                 </div>
@@ -650,21 +662,21 @@ const PropuestaTecnica = () => {
 
             {/* 3. Acordeones */}
             <div>
-              <h3 className={`text-xl font-bold text-${g}-800 mb-4`}>Acordeones (FAQs)</h3>
-              <div className={`bg-white rounded-xl border border-${g}-200 overflow-hidden`}>
-                <div className={`border-b border-${g}-100`}>
-                  <button className={`w-full flex justify-between items-center p-4 text-left hover:bg-${g}-50`}>
-                    <span className={`font-medium text-${g}-700`}>¿Cómo gestionan la seguridad de los datos?</span>
-                    <ChevronUp className={`w-5 h-5 text-${g}-400`} />
+              <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : `text-${g}-800`} mb-4`}>Acordeones (FAQs)</h3>
+              <div className={`${isDarkMode ? `bg-${g}-900 border-${g}-800` : `bg-white border-${g}-200`} rounded-xl border overflow-hidden`}>
+                <div className={`border-b ${isDarkMode ? `border-${g}-800` : `border-${g}-100`}`}>
+                  <button className={`w-full flex justify-between items-center p-4 text-left ${isDarkMode ? `hover:bg-${g}-800` : `hover:bg-${g}-50`}`}>
+                    <span className={`font-medium ${isDarkMode ? `text-${g}-300` : `text-${g}-700`}`}>¿Cómo gestionan la seguridad de los datos?</span>
+                    <ChevronUp className={`w-5 h-5 ${isDarkMode ? `text-${g}-500` : `text-${g}-400`}`} />
                   </button>
-                  <div className={`p-4 pt-0 text-${g}-600 text-sm`}>
+                  <div className={`p-4 pt-0 ${isDarkMode ? `text-${g}-400` : `text-${g}-600`} text-sm`}>
                     Utilizamos Row Level Security (RLS) de Supabase para asegurar que cada usuario solo acceda a sus propios datos.
                   </div>
                 </div>
                 <div>
-                  <button className={`w-full flex justify-between items-center p-4 text-left hover:bg-${g}-50`}>
-                    <span className={`font-medium text-${g}-700`}>¿Es escalable la infraestructura?</span>
-                    <ChevronDown className={`w-5 h-5 text-${g}-400`} />
+                  <button className={`w-full flex justify-between items-center p-4 text-left ${isDarkMode ? `hover:bg-${g}-800` : `hover:bg-${g}-50`}`}>
+                    <span className={`font-medium ${isDarkMode ? `text-${g}-300` : `text-${g}-700`}`}>¿Es escalable la infraestructura?</span>
+                    <ChevronDown className={`w-5 h-5 ${isDarkMode ? `text-${g}-500` : `text-${g}-400`}`} />
                   </button>
                 </div>
               </div>
@@ -679,14 +691,14 @@ const PropuestaTecnica = () => {
               <ShieldCheck className="w-4 h-4" />
               <span className="text-sm font-semibold uppercase tracking-wider">Seguridad y Validación</span>
             </div>
-            <h2 className={`${montserrat.className} text-3xl font-extrabold text-${g}-900 mb-3`}>
+            <h2 className={`${montserrat.className} text-3xl font-extrabold ${isDarkMode ? 'text-white' : `text-${g}-900`} mb-3`}>
               Formularios Inteligentes
             </h2>
-            <p className={`text-lg text-${g}-600 max-w-3xl mx-auto`}>
+            <p className={`text-lg ${isDarkMode ? `text-${g}-400` : `text-${g}-600`} max-w-3xl mx-auto`}>
               Ejemplo interactivo de validación en tiempo real, máscaras de entrada y gestión de errores.
             </p>
           </header>
-          <FormValidationDemo p={p} g={g} />
+          <FormValidationDemo p={p} g={g} isDarkMode={isDarkMode} />
         </section>
 
         {/* Sistemas de Diseño */}
@@ -696,40 +708,40 @@ const PropuestaTecnica = () => {
               <Palette className="w-4 h-4" />
               <span className="text-sm font-semibold uppercase tracking-wider">Sistema de Diseño</span>
             </div>
-            <h2 className={`${montserrat.className} text-3xl font-extrabold text-${g}-900 mb-3`}>
+            <h2 className={`${montserrat.className} text-3xl font-extrabold ${isDarkMode ? 'text-white' : `text-${g}-900`} mb-3`}>
               Consistencia Visual
             </h2>
-            <p className={`text-lg text-${g}-600 max-w-3xl mx-auto`}>
+            <p className={`text-lg ${isDarkMode ? `text-${g}-400` : `text-${g}-600`} max-w-3xl mx-auto`}>
               Estándares tipográficos, estados vacíos y adaptabilidad a modo oscuro.
             </p>
           </header>
 
           <div className="space-y-12">
             {/* 1. Tipografía */}
-            <div className={`bg-white p-8 rounded-2xl border border-${g}-200 shadow-sm`}>
-               <h3 className={`text-xl font-bold text-${g}-800 mb-6 border-b border-${g}-100 pb-2`}>Escala Tipográfica</h3>
+            <div className={`${isDarkMode ? `bg-${g}-900 border-${g}-800` : `bg-white border-${g}-200`} p-8 rounded-2xl border shadow-sm`}>
+               <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : `text-${g}-800`} mb-6 border-b ${isDarkMode ? `border-${g}-700` : `border-${g}-100`} pb-2`}>Escala Tipográfica</h3>
                <div className="space-y-6">
                   <div className="grid md:grid-cols-4 items-center gap-4">
-                    <span className={`text-${g}-400 text-sm font-mono`}>H1 / Montserrat / 4xl</span>
-                    <h1 className={`${montserrat.className} col-span-3 text-4xl font-extrabold text-${g}-900`}>El rápido zorro marrón</h1>
+                    <span className={`${isDarkMode ? `text-${g}-500` : `text-${g}-400`} text-sm font-mono`}>H1 / Montserrat / 4xl</span>
+                    <h1 className={`${montserrat.className} col-span-3 text-4xl font-extrabold ${isDarkMode ? 'text-white' : `text-${g}-900`}`}>El rápido zorro marrón</h1>
                   </div>
                   <div className="grid md:grid-cols-4 items-center gap-4">
-                    <span className={`text-${g}-400 text-sm font-mono`}>H2 / Montserrat / 3xl</span>
-                    <h2 className={`${montserrat.className} col-span-3 text-3xl font-bold text-${g}-900`}>Salta sobre el perro perezoso</h2>
+                    <span className={`${isDarkMode ? `text-${g}-500` : `text-${g}-400`} text-sm font-mono`}>H2 / Montserrat / 3xl</span>
+                    <h2 className={`${montserrat.className} col-span-3 text-3xl font-bold ${isDarkMode ? 'text-white' : `text-${g}-900`}`}>Salta sobre el perro perezoso</h2>
                   </div>
                   <div className="grid md:grid-cols-4 items-center gap-4">
-                    <span className={`text-${g}-400 text-sm font-mono`}>H3 / Montserrat / xl</span>
-                    <h3 className={`${montserrat.className} col-span-3 text-xl font-semibold text-${g}-900`}>Visualización de datos y métricas</h3>
+                    <span className={`${isDarkMode ? `text-${g}-500` : `text-${g}-400`} text-sm font-mono`}>H3 / Montserrat / xl</span>
+                    <h3 className={`${montserrat.className} col-span-3 text-xl font-semibold ${isDarkMode ? 'text-white' : `text-${g}-900`}`}>Visualización de datos y métricas</h3>
                   </div>
                   <div className="grid md:grid-cols-4 items-center gap-4">
-                    <span className={`text-${g}-400 text-sm font-mono`}>P / Inter / base</span>
-                    <p className={`${inter.className} col-span-3 text-base leading-relaxed text-${g}-600`}>
+                    <span className={`${isDarkMode ? `text-${g}-500` : `text-${g}-400`} text-sm font-mono`}>P / Inter / base</span>
+                    <p className={`${inter.className} col-span-3 text-base leading-relaxed ${isDarkMode ? `text-${g}-400` : `text-${g}-600`}`}>
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                     </p>
                   </div>
                   <div className="grid md:grid-cols-4 items-center gap-4">
-                    <span className={`text-${g}-400 text-sm font-mono`}>Small / Inter / sm</span>
-                    <small className={`${inter.className} col-span-3 text-sm font-medium text-${g}-500`}>
+                    <span className={`${isDarkMode ? `text-${g}-500` : `text-${g}-400`} text-sm font-mono`}>Small / Inter / sm</span>
+                    <small className={`${inter.className} col-span-3 text-sm font-medium ${isDarkMode ? `text-${g}-500` : `text-${g}-500`}`}>
                       *Términos y condiciones aplican. Válido hasta agotar stock.
                     </small>
                   </div>
@@ -738,14 +750,14 @@ const PropuestaTecnica = () => {
 
             <div className="grid md:grid-cols-2 gap-8">
                 {/* 2. Empty State */}
-                <div className={`bg-white p-8 rounded-2xl border border-${g}-200 shadow-sm flex flex-col`}>
-                    <h3 className={`text-xl font-bold text-${g}-800 mb-6`}>Empty State (Sin Datos)</h3>
-                    <div className={`flex-1 flex flex-col items-center justify-center p-8 bg-${g}-50 rounded-xl border-2 border-dashed border-${g}-200 text-center`}>
-                        <div className={`size-16 bg-white rounded-full flex items-center justify-center mb-4 shadow-sm`}>
-                            <Image className={`size-8 text-${g}-400`} />
+                <div className={`${isDarkMode ? `bg-${g}-900 border-${g}-800` : `bg-white border-${g}-200`} p-8 rounded-2xl border shadow-sm flex flex-col`}>
+                    <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : `text-${g}-800`} mb-6`}>Empty State (Sin Datos)</h3>
+                    <div className={`flex-1 flex flex-col items-center justify-center p-8 ${isDarkMode ? `bg-${g}-950 border-${g}-700` : `bg-${g}-50 border-${g}-200`} rounded-xl border-2 border-dashed text-center`}>
+                        <div className={`size-16 ${isDarkMode ? `bg-${g}-800` : `bg-white`} rounded-full flex items-center justify-center mb-4 shadow-sm`}>
+                            <Image className={`size-8 ${isDarkMode ? `text-${g}-500` : `text-${g}-400`}`} />
                         </div>
-                        <h4 className={`text-lg font-bold text-${g}-900`}>Sin imágenes todavía</h4>
-                        <p className={`text-${g}-500 text-sm mt-1 mb-6 max-w-[250px]`}>
+                        <h4 className={`text-lg font-bold ${isDarkMode ? 'text-white' : `text-${g}-900`}`}>Sin imágenes todavía</h4>
+                        <p className={`${isDarkMode ? `text-${g}-400` : `text-${g}-500`} text-sm mt-1 mb-6 max-w-[250px]`}>
                             Tu galería está vacía. ¡Sube tu primera foto para empezar a destacar!
                         </p>
                         <button className={`bg-${p}-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-${p}-700 transition-colors shadow-lg shadow-${p}-500/20`}>
@@ -828,10 +840,10 @@ const PropuestaTecnica = () => {
               <Layout className="w-4 h-4" />
               <span className="text-sm font-semibold uppercase tracking-wider">Recursos Visuales</span>
             </div>
-            <h2 className={`${montserrat.className} text-3xl font-extrabold text-${g}-900 mb-3`}>
+            <h2 className={`${montserrat.className} text-3xl font-extrabold ${isDarkMode ? 'text-white' : `text-${g}-900`} mb-3`}>
               Iconografía
             </h2>
-            <p className={`text-lg text-${g}-600 max-w-3xl mx-auto`}>
+            <p className={`text-lg ${isDarkMode ? `text-${g}-400` : `text-${g}-600`} max-w-3xl mx-auto`}>
               Conjunto de iconos consistentes utilizados en toda la aplicación.
             </p>
             <a href="https://lucide.dev/icons" target="_blank" rel="noopener noreferrer" className={`mt-4 inline-flex items-center gap-2 text-${p}-600 font-bold hover:underline`}>
@@ -839,21 +851,21 @@ const PropuestaTecnica = () => {
             </a>
           </header>
 
-          <div className={`bg-white p-8 rounded-2xl border border-${g}-200 shadow-sm`}>
+          <div className={`${isDarkMode ? `bg-${g}-900 border-${g}-800` : `bg-white border-${g}-200`} p-8 rounded-2xl border shadow-sm`}>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8">
                {iconsList.map(({ name, Icon }) => (
                  <div key={name} className="flex flex-col items-center gap-3 group cursor-default">
-                    <div className={`p-4 rounded-xl bg-${g}-50 text-${g}-500 group-hover:bg-${p}-50 group-hover:text-${p}-600 transition-colors`}>
+                    <div className={`p-4 rounded-xl ${isDarkMode ? `bg-${g}-800 text-${g}-400 group-hover:bg-${g}-700` : `bg-${g}-50 text-${g}-500 group-hover:bg-${p}-50 group-hover:text-${p}-600`} transition-colors`}>
                         <Icon className="size-6" />
                     </div>
-                    <span className={`text-xs font-medium text-${g}-500 font-mono group-hover:text-${g}-900`}>{name}</span>
+                    <span className={`text-xs font-medium ${isDarkMode ? `text-${g}-500 group-hover:text-${g}-300` : `text-${g}-500 group-hover:text-${g}-900`} font-mono`}>{name}</span>
                  </div>
                ))}
             </div>
           </div>
         </section>
 
-        <footer className="mt-20 text-center">
+        <footer className={`mt-20 text-center py-8 ${isDarkMode ? `border-t border-${g}-800` : ''}`}>
           <div className={`inline-flex items-center gap-2 bg-${g}-900 text-white px-8 py-4 rounded-2xl shadow-lg`}>
             <Code2 className={`w-6 h-6 text-${p}-400`} />
             <span className="font-semibold">Next.js + Tailwind + Supabase + Prisma</span>
