@@ -68,6 +68,39 @@ const THEMES = {
   emerald: { id: 'emerald', label: 'Eco Green', primary: 'emerald', gray: 'stone', hex: '#059669' }
 };
 
+const PROPERTIES = [
+  {
+    id: 1,
+    title: "Residencia Moderna en Cala Cala",
+    price: "$250,000",
+    location: "Cochabamba, Zona Norte",
+    beds: 4,
+    baths: 3,
+    sqft: 320,
+    image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    id: 2,
+    title: "Departamento Minimalista",
+    price: "$120,000",
+    location: "Centro Histórico",
+    beds: 2,
+    baths: 2,
+    sqft: 110,
+    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    id: 3,
+    title: "Villa con Jardín Amplio",
+    price: "$380,000",
+    location: "Tiquipaya, El Paso",
+    beds: 5,
+    baths: 4,
+    sqft: 500,
+    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80"
+  }
+];
+
 type ThemeKey = keyof typeof THEMES;
 
 // Componente Demo de Formulario (Definido aquí para uso en la propuesta)
@@ -229,13 +262,21 @@ const FormValidationDemo = ({ p, g, isDarkMode }: { p: string, g: string, isDark
 
 const PropuestaTecnica = () => {
   const [font, setFont] = useState('font-inter');
-  const [currentTheme, setCurrentTheme] = useState<ThemeKey>('blue');
+  const [currentTheme, setCurrentTheme] = useState<ThemeKey>('amber');
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Helpers para clases dinámicas
   const theme = THEMES[currentTheme];
   const p = theme.primary;
   const g = theme.gray;
+
+  // Función para convertir Hex a RGB
+  const hexToRgb = (hex: string) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `${r}, ${g}, ${b}`;
+  };
 
   const techStack = [
     {
@@ -311,6 +352,10 @@ const PropuestaTecnica = () => {
             <div className="hidden md:flex items-center gap-8">
               <Link href="/" className={`${isDarkMode ? `text-${g}-300 hover:text-${p}-400` : `text-${g}-600 hover:text-${p}-600`} font-medium transition-colors`}>Inicio</Link>
               <div className={`flex items-center gap-4 border-l ${isDarkMode ? `border-${g}-800` : `border-${g}-200`} ml-4 pl-4`}>
+                <button onClick={() => setIsDarkMode(!isDarkMode)} className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all ${isDarkMode ? `bg-${g}-800 text-white ring-1 ring-${g}-700` : `bg-${g}-100 text-${g}-600 hover:bg-${g}-200`}`}>
+                    {isDarkMode ? <Moon className="size-4" /> : <Sun className="size-4 text-amber-500" />}
+                    <span className="font-bold tracking-wide text-[10px]">{isDarkMode ? 'OSCURO' : 'CLARO'}</span>
+                </button>
                 <button className={`p-2 ${isDarkMode ? `text-${g}-400 hover:text-${p}-400` : `text-${g}-400 hover:text-${p}-600`} transition-colors`}>
                   <Bell className="w-5 h-5" />
                 </button>
@@ -327,47 +372,6 @@ const PropuestaTecnica = () => {
           </div>
         </div>
       </nav>
-
-      {/* BARRA DE CONTROL DE DEMO (Idéntica al Home) */}
-      <div className={`${isDarkMode ? `bg-${g}-900 text-${g}-400 border-${g}-800` : `bg-white text-${g}-500 border-${g}-200`} py-2 text-center text-xs border-b transition-colors duration-500 sticky top-16 z-40`}>
-          <div className="flex justify-center gap-6 items-center flex-wrap px-4">
-            {/* Selector de Fuente */}
-            <div className="flex items-center gap-2">
-                <Wand2 className="size-3" />
-                <span className="opacity-80 font-mono">FUENTE:</span>
-                <button onClick={() => setFont('font-montserrat')} className={`px-3 py-0.5 rounded transition-colors ${font === 'font-montserrat' ? `bg-${p}-600 text-white` : `hover:bg-${g}-100 ${isDarkMode ? `hover:bg-${g}-800` : ''}`}`}>Montserrat</button>
-                <button onClick={() => setFont('font-inter')} className={`px-3 py-0.5 rounded transition-colors ${font === 'font-inter' ? `bg-${p}-600 text-white` : `hover:bg-${g}-100 ${isDarkMode ? `hover:bg-${g}-800` : ''}`}`}>Inter</button>
-            </div>
-            <div className={`w-px h-4 bg-${g}-200 hidden sm:block`}></div>
-            {/* Selector de Tema */}
-            <div className="flex items-center gap-2">
-                <Palette className="size-3" />
-                <span className="opacity-80 font-mono">TEMA:</span>
-                <div className="flex gap-1">
-                    {(Object.keys(THEMES) as ThemeKey[]).map((key) => (
-                        <button 
-                            key={key}
-                            onClick={() => setCurrentTheme(key)}
-                            className={`size-5 rounded-full flex items-center justify-center transition-transform hover:scale-110 ${currentTheme === key ? 'ring-2 ring-white' : ''}`}
-                            style={{ backgroundColor: THEMES[key].hex }}
-                            title={THEMES[key].label}
-                        >
-                            {currentTheme === key && <Check className="size-3 text-white" strokeWidth={3} />}
-                        </button>
-                    ))}
-                </div>
-            </div>
-            
-            <div className={`w-px h-4 bg-${g}-200 hidden sm:block`}></div>
-
-            {/* Selector de Modo Oscuro */}
-            <button onClick={() => setIsDarkMode(!isDarkMode)} className={`flex items-center gap-2 px-3 py-0.5 rounded-full transition-all ${isDarkMode ? `bg-${g}-800 text-white ring-1 ring-${g}-700` : `bg-${g}-100 text-${g}-600 hover:bg-${g}-200`}`}>
-                {isDarkMode ? <Moon className="size-3" /> : <Sun className="size-3 text-amber-500" />}
-                <span className="font-bold tracking-wide text-[10px]">{isDarkMode ? 'OSCURO' : 'CLARO'}</span>
-            </button>
-
-          </div>
-      </div>
 
       <main className="max-w-5xl mx-auto px-6 py-16">
         <header className="mb-16 text-center">
@@ -457,15 +461,56 @@ const PropuestaTecnica = () => {
                 <p className={`text-sm ${isDarkMode ? `text-${g}-400` : `text-${g}-600`} mb-4`}>Muestran una silueta del contenido mientras cargan los datos, mejorando la percepción de velocidad.</p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {[1, 2, 3].map(i => (
-                    <div key={i} className={`rounded-lg border ${isDarkMode ? `border-${g}-800 bg-${g}-950` : `border-${g}-200 bg-white`} p-4 space-y-4`}>
-                      <div className={`w-full h-32 ${isDarkMode ? `bg-${g}-800` : `bg-${g}-200`} rounded-md animate-pulse`}></div>
-                      <div className="space-y-3">
-                        <div className={`h-5 ${isDarkMode ? `bg-${g}-800` : `bg-${g}-200`} rounded w-3/4 animate-pulse`}></div>
-                        <div className={`h-4 ${isDarkMode ? `bg-${g}-800` : `bg-${g}-200`} rounded w-1/2 animate-pulse`}></div>
+                    <div key={i} className={`rounded-2xl border ${isDarkMode ? `border-${g}-800 bg-${g}-900` : `border-${g}-200 bg-white`} overflow-hidden`}>
+                      <div className={`w-full h-48 ${isDarkMode ? `bg-${g}-700` : `bg-${g}-200`} animate-pulse`}></div>
+                      <div className="p-5 space-y-4">
+                        <div className="flex justify-between items-center">
+                            <div className={`h-6 ${isDarkMode ? `bg-${g}-700` : `bg-${g}-200`} rounded w-2/3 animate-pulse`}></div>
+                            <div className={`h-6 ${isDarkMode ? `bg-${g}-700` : `bg-${g}-200`} rounded w-1/4 animate-pulse`}></div>
+                        </div>
+                        <div className={`h-4 ${isDarkMode ? `bg-${g}-700` : `bg-${g}-200`} rounded w-1/2 animate-pulse`}></div>
+                        <div className={`flex gap-4 pt-4 border-t ${isDarkMode ? `border-${g}-800` : `border-${g}-100`}`}>
+                            <div className={`h-4 ${isDarkMode ? `bg-${g}-700` : `bg-${g}-200`} rounded w-1/4 animate-pulse`}></div>
+                            <div className={`h-4 ${isDarkMode ? `bg-${g}-700` : `bg-${g}-200`} rounded w-1/4 animate-pulse`}></div>
+                            <div className={`h-4 ${isDarkMode ? `bg-${g}-700` : `bg-${g}-200`} rounded w-1/4 animate-pulse`}></div>
+                        </div>
                       </div>
-                      <div className={`h-8 ${isDarkMode ? `bg-${g}-800` : `bg-${g}-200`} rounded w-1/3 animate-pulse mt-4`}></div>
                     </div>
                   ))}
+                </div>
+              </div>
+            </div>
+
+            {/* 3. Sistema de Grillas (NUEVO) */}
+            <div>
+              <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : `text-${g}-800`} mb-4`}>Sistema de Grillas Responsivo</h3>
+              <div className={`${isDarkMode ? `bg-${g}-900 border-${g}-800` : `bg-white border-${g}-200`} p-6 rounded-xl border shadow-sm`}>
+                <p className={`text-sm ${isDarkMode ? `text-${g}-400` : `text-${g}-600`} mb-6`}>Ejemplo real de implementación de grillas responsivas con tarjetas de propiedad.</p>
+                <div className="grid md:grid-cols-3 gap-8">
+                    {PROPERTIES.map((prop) => (
+                        <div key={prop.id} className={`${isDarkMode ? `bg-${g}-900 border-${g}-800` : `bg-white border-${g}-200`} rounded-2xl border overflow-hidden hover:shadow-xl hover:shadow-${p}-500/10 hover:border-${p}-500 transition-all group cursor-pointer`}>
+                            <div className="relative h-48 overflow-hidden">
+                                <img src={prop.image} alt={prop.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                <div className={`absolute top-4 right-4 bg-${p}-600 px-3 py-1 rounded-full text-xs font-bold text-white shadow-sm`}>
+                                    En Venta
+                                </div>
+                            </div>
+                            <div className="p-5">
+                                <div className="flex justify-between items-start mb-2">
+                                    <h3 className={`text-base font-bold ${isDarkMode ? `text-white group-hover:text-${p}-400` : `text-${g}-900 group-hover:text-${p}-600`} transition-colors line-clamp-1`}>{prop.title}</h3>
+                                    <p className={`text-base font-bold text-${p}-600`}>{prop.price}</p>
+                                </div>
+                                <p className={`${isDarkMode ? `text-${g}-400` : `text-${g}-500`} text-xs mb-4 flex items-center gap-1`}>
+                                    <MapPin className={`size-3 text-${p}-500`} /> {prop.location}
+                                </p>
+                                <div className={`flex items-center gap-4 ${isDarkMode ? `text-${g}-400 border-${g}-800` : `text-${g}-600 border-${g}-100`} text-xs border-t pt-4`}>
+                                    <div className="flex items-center gap-1"><Bed className={`size-3.5 text-${p}-500`} /> {prop.beds}</div>
+                                    <div className="flex items-center gap-1"><Bath className={`size-3.5 text-${p}-500`} /> {prop.baths}</div>
+                                    <div className="flex items-center gap-1"><Square className={`size-3.5 text-${p}-500`} /> {prop.sqft}m²</div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
               </div>
             </div>
@@ -507,7 +552,7 @@ const PropuestaTecnica = () => {
                 </h3>
                 <div className="flex flex-col md:flex-row gap-8">
                     {/* Sidebar Mockup */}
-                    <div className={`w-full md:w-64 flex-shrink-0 border ${isDarkMode ? `border-${g}-700 bg-${g}-950/50` : `border-${g}-200 bg-${g}-50/50`} rounded-xl p-5`}>
+                    <div className={`w-full md:w-64 flex-shrink-0 border ${isDarkMode ? `border-${g}-700 bg-${g}-950` : `border-${g}-200 bg-${g}-50/50`} rounded-xl p-5`}>
                         <div className="flex justify-between items-center mb-6">
                             <span className={`font-bold ${isDarkMode ? 'text-white' : `text-${g}-900`} text-sm`}>Filtros</span>
                             <button className={`text-${p}-600 text-xs font-medium hover:underline`}>Limpiar todo</button>
@@ -610,14 +655,14 @@ const PropuestaTecnica = () => {
                 <div className={`absolute top-0 right-0 h-full w-64 ${isDarkMode ? `bg-${g}-800 border-${g}-700` : `bg-white border-${g}-100`} shadow-2xl border-l p-4 transform translate-x-0`}>
                   <div className="flex justify-between items-center mb-6">
                     <span className={`font-bold ${isDarkMode ? 'text-white' : `text-${g}-900`}`}>Filtros</span>
-                    <button className={`p-1 hover:bg-${g}-100 rounded`}><X className={`w-4 h-4 ${isDarkMode ? `text-${g}-400` : `text-${g}-500`}`} /></button>
+                    <button className={`p-1 ${isDarkMode ? `hover:bg-${g}-700` : `hover:bg-${g}-100`} rounded transition-colors`}><X className={`w-4 h-4 ${isDarkMode ? `text-${g}-400` : `text-${g}-500`}`} /></button>
                   </div>
                   <div className="space-y-4">
                     <div className={`h-2 ${isDarkMode ? `bg-${g}-700` : `bg-${g}-100`} rounded w-full`}></div>
                     <div className={`h-2 ${isDarkMode ? `bg-${g}-700` : `bg-${g}-100`} rounded w-3/4`}></div>
                     <div className={`h-2 ${isDarkMode ? `bg-${g}-700` : `bg-${g}-100`} rounded w-1/2`}></div>
                   </div>
-                  <button className={`w-full mt-8 bg-${p}-600 text-white py-2 rounded-lg text-sm`}>Aplicar</button>
+                  <button className={`w-full mt-8 bg-${p}-600 hover:bg-${p}-700 text-white py-2 rounded-lg text-sm transition-colors shadow-lg shadow-${p}-600/20`}>Aplicar</button>
                 </div>
               </div>
             </div>
@@ -748,6 +793,72 @@ const PropuestaTecnica = () => {
                </div>
             </div>
 
+            {/* 2. Paleta de Colores */}
+            <div>
+              <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : `text-${g}-800`} mb-6`}>Paleta de Colores</h3>
+              <div className="grid md:grid-cols-2 gap-8">
+                  {/* Modo Claro */}
+                  <div className={`${isDarkMode ? `bg-${g}-900 border-${g}-800` : `bg-white border-${g}-200`} p-8 rounded-2xl border shadow-sm`}>
+                      <h4 className={`font-bold text-lg ${isDarkMode ? `text-white` : `text-${g}-800`} mb-6`}>Modo Claro</h4>
+                      <div className="space-y-5">
+                          <div className="flex items-center gap-4">
+                              <div className={`size-10 rounded-full bg-${p}-600 border border-black/10`}></div>
+                              <div>
+                                  <p className={`font-bold ${isDarkMode ? `text-white` : `text-${g}-800`}`}>Primario (Acentos)</p>
+                                  <p className={`text-sm ${isDarkMode ? `text-${g}-400` : `text-${g}-500`} font-mono`}>
+                                    {theme.hex} <span className="opacity-30">/</span> rgb({hexToRgb(theme.hex)})
+                                  </p>
+                                  <p className={`text-xs ${isDarkMode ? `text-${g}-500` : `text-${g}-400`}`}>Clase: text-{p}-600</p>
+                              </div>
+                          </div>
+                          <div className="flex items-center gap-4">
+                              <div className={`size-10 rounded-full bg-stone-900 border border-black/10`}></div>
+                              <div>
+                                  <p className={`font-bold ${isDarkMode ? `text-white` : `text-${g}-800`}`}>Títulos y Texto Principal</p>
+                                  <p className={`text-sm ${isDarkMode ? `text-${g}-400` : `text-${g}-500`} font-mono`}>#292524 <span className="opacity-30">/</span> rgb(41, 37, 36)</p>
+                                  <p className={`text-xs ${isDarkMode ? `text-${g}-500` : `text-${g}-400`}`}>Clase: text-stone-900</p>
+                              </div>
+                          </div>
+                          <div className="flex items-center gap-4">
+                              <div className={`size-10 rounded-full bg-stone-600 border border-black/10`}></div>
+                              <div>
+                                  <p className={`font-bold ${isDarkMode ? `text-white` : `text-${g}-800`}`}>Párrafos y Texto Secundario</p>
+                                  <p className={`text-sm ${isDarkMode ? `text-${g}-400` : `text-${g}-500`} font-mono`}>#78716c <span className="opacity-30">/</span> rgb(120, 113, 108)</p>
+                                  <p className={`text-xs ${isDarkMode ? `text-${g}-500` : `text-${g}-400`}`}>Clase: text-stone-600</p>
+                              </div>
+                          </div>
+                          <div className="flex items-center gap-4">
+                              <div className={`size-10 rounded-full bg-stone-100 border border-black/10`}></div>
+                              <div>
+                                  <p className={`font-bold ${isDarkMode ? `text-white` : `text-${g}-800`}`}>Bordes y Fondos Sutiles</p>
+                                  <p className={`text-sm ${isDarkMode ? `text-${g}-400` : `text-${g}-500`} font-mono`}>#f5f5f4 <span className="opacity-30">/</span> rgb(245, 245, 244)</p>
+                                  <p className={`text-xs ${isDarkMode ? `text-${g}-500` : `text-${g}-400`}`}>Clase: bg-stone-100</p>
+                              </div>
+                          </div>
+                          <div className="flex items-center gap-4">
+                              <div className={`size-10 rounded-full bg-white border border-black/10`}></div>
+                              <div>
+                                  <p className={`font-bold ${isDarkMode ? `text-white` : `text-${g}-800`}`}>Superficies (Tarjetas)</p>
+                                  <p className={`text-sm ${isDarkMode ? `text-${g}-400` : `text-${g}-500`} font-mono`}>#ffffff <span className="opacity-30">/</span> rgb(255, 255, 255)</p>
+                                  <p className={`text-xs ${isDarkMode ? `text-${g}-500` : `text-${g}-400`}`}>Clase: bg-white</p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  {/* Modo Oscuro (Hardcoded para demostración) */}
+                  <div className="bg-stone-950 p-8 rounded-2xl border border-stone-800 shadow-sm">
+                      <h4 className="font-bold text-lg text-white mb-6">Modo Oscuro</h4>
+                      <div className="space-y-5">
+                          <div className="flex items-center gap-4"><div className="size-10 rounded-full bg-amber-600 border border-white/10"></div><div><p className="font-bold text-white">Primario (Acentos)</p><p className="text-sm text-stone-400 font-mono">#D97706 <span className="opacity-30">/</span> rgb(217, 119, 6)</p><p className="text-xs text-stone-500">Clase: text-amber-600</p></div></div>
+                          <div className="flex items-center gap-4"><div className="size-10 rounded-full bg-stone-100 border border-white/10"></div><div><p className="font-bold text-white">Títulos y Texto Principal</p><p className="text-sm text-stone-400 font-mono">#f5f5f4 <span className="opacity-30">/</span> rgb(245, 245, 244)</p><p className="text-xs text-stone-500">Clase: text-stone-100</p></div></div>
+                          <div className="flex items-center gap-4"><div className="size-10 rounded-full bg-stone-400 border border-white/10"></div><div><p className="font-bold text-white">Párrafos y Texto Secundario</p><p className="text-sm text-stone-400 font-mono">#a8a29e <span className="opacity-30">/</span> rgb(168, 162, 158)</p><p className="text-xs text-stone-500">Clase: text-stone-400</p></div></div>
+                          <div className="flex items-center gap-4"><div className="size-10 rounded-full bg-stone-800 border border-white/10"></div><div><p className="font-bold text-white">Bordes y Fondos Sutiles</p><p className="text-sm text-stone-400 font-mono">#44403c <span className="opacity-30">/</span> rgb(68, 64, 60)</p><p className="text-xs text-stone-500">Clase: bg-stone-800</p></div></div>
+                          <div className="flex items-center gap-4"><div className="size-10 rounded-full bg-stone-900 border border-white/10"></div><div><p className="font-bold text-white">Superficies (Tarjetas)</p><p className="text-sm text-stone-400 font-mono">#292524 <span className="opacity-30">/</span> rgb(41, 37, 36)</p><p className="text-xs text-stone-500">Clase: bg-stone-900</p></div></div>
+                      </div>
+                  </div>
+              </div>
+            </div>
+
             <div className="grid md:grid-cols-2 gap-8">
                 {/* 2. Empty State */}
                 <div className={`${isDarkMode ? `bg-${g}-900 border-${g}-800` : `bg-white border-${g}-200`} p-8 rounded-2xl border shadow-sm flex flex-col`}>
@@ -876,9 +987,9 @@ const PropuestaTecnica = () => {
       {/* SAFELIST: Forzar generación de clases dinámicas de Tailwind (Copiado del Home) */}
       <div className="hidden">
         {/* Grays */}
-        <div className="bg-slate-50 bg-slate-900 text-slate-500 text-slate-600 text-slate-900 border-slate-100 border-slate-200 border-slate-500"></div>
-        <div className="bg-zinc-50 bg-zinc-900 text-zinc-500 text-zinc-600 text-zinc-900 border-zinc-100 border-zinc-200 border-zinc-500"></div>
-        <div className="bg-stone-50 bg-stone-900 text-stone-500 text-stone-600 text-stone-900 border-stone-100 border-stone-200 border-stone-500"></div>
+        <div className="bg-slate-50 bg-slate-100 bg-slate-200 bg-slate-300 bg-slate-400 bg-slate-500 bg-slate-600 bg-slate-700 bg-slate-800 bg-slate-900 bg-slate-950 text-slate-100 text-slate-200 text-slate-300 text-slate-400 text-slate-500 text-slate-600 text-slate-700 text-slate-800 text-slate-900 border-slate-100 border-slate-200 border-slate-300 border-slate-400 border-slate-500 border-slate-600 border-slate-700 border-slate-800 border-slate-900"></div>
+        <div className="bg-zinc-50 bg-zinc-100 bg-zinc-200 bg-zinc-300 bg-zinc-400 bg-zinc-500 bg-zinc-600 bg-zinc-700 bg-zinc-800 bg-zinc-900 bg-zinc-950 text-zinc-100 text-zinc-200 text-zinc-300 text-zinc-400 text-zinc-500 text-zinc-600 text-zinc-700 text-zinc-800 text-zinc-900 border-zinc-100 border-zinc-200 border-zinc-300 border-zinc-400 border-zinc-500 border-zinc-600 border-zinc-700 border-zinc-800 border-zinc-900"></div>
+        <div className="bg-stone-50 bg-stone-100 bg-stone-200 bg-stone-300 bg-stone-400 bg-stone-500 bg-stone-600 bg-stone-700 bg-stone-800 bg-stone-900 bg-stone-950 text-stone-100 text-stone-200 text-stone-300 text-stone-400 text-stone-500 text-stone-600 text-stone-700 text-stone-800 text-stone-900 border-stone-100 border-stone-200 border-stone-300 border-stone-400 border-stone-500 border-stone-600 border-stone-700 border-stone-800 border-stone-900"></div>
         {/* Primaries */}
         <div className="bg-blue-50 bg-blue-100 bg-blue-500 bg-blue-600 text-blue-100 text-blue-500 text-blue-600 text-blue-700 border-blue-200 border-blue-400 border-blue-500 ring-blue-500 shadow-blue-500/20 hover:shadow-blue-500/10"></div>
         <div className="bg-indigo-50 bg-indigo-100 bg-indigo-500 bg-indigo-600 text-indigo-100 text-indigo-500 text-indigo-600 text-indigo-700 border-indigo-200 border-indigo-400 border-indigo-500 ring-indigo-500 shadow-indigo-500/20 hover:shadow-indigo-500/10"></div>

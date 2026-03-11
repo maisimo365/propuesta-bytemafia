@@ -97,7 +97,7 @@ const PROPERTIES = [
 
 export default function Propuesta7Marzo() {
   const [font, setFont] = useState('font-inter');
-  const [currentTheme, setCurrentTheme] = useState<ThemeKey>('blue');
+  const [currentTheme, setCurrentTheme] = useState<ThemeKey>('amber');
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Helpers para clases dinámicas
@@ -157,6 +157,10 @@ export default function Propuesta7Marzo() {
                 Publicar Inmueble
               </button>
               <div className="flex items-center gap-3">
+                <button onClick={() => setIsDarkMode(!isDarkMode)} className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all ${isDarkMode ? `bg-${g}-800 text-white ring-1 ring-${g}-700` : `bg-${g}-100 text-${g}-600 hover:bg-${g}-200`}`}>
+                    {isDarkMode ? <Moon className="size-4" /> : <Sun className="size-4 text-amber-500" />}
+                    <span className="font-bold tracking-wide text-[10px] hidden sm:block">{isDarkMode ? 'OSCURO' : 'CLARO'}</span>
+                </button>
                 <button className={`${isDarkMode ? `text-${g}-400 hover:bg-${g}-800` : `text-${g}-500 hover:bg-${g}-100`} hover:text-${p}-600 p-2 rounded-full transition-all relative group`}>
                     <Bell className="size-5" />
                     <span className="absolute top-2 right-2 size-2 bg-rose-500 rounded-full border-2 border-white group-hover:scale-110 transition-transform"></span>
@@ -172,50 +176,6 @@ export default function Propuesta7Marzo() {
           </div>
         </div>
       </nav>
-
-      {/* BARRA DE CONTROL DE DEMO (Para cambiar fuentes y temas) */}
-      <div className={`${isDarkMode ? `bg-${g}-900 text-${g}-400 border-${g}-800` : `bg-white text-${g}-500 border-${g}-200`} py-2 text-center text-xs border-b transition-colors duration-500`}>
-          <div className="flex justify-center gap-6 items-center flex-wrap px-4">
-            
-            {/* Selector de Fuente */}
-            <div className="flex items-center gap-2">
-                <Wand2 className="size-3" />
-                <span className="opacity-80 font-mono">FUENTE:</span>
-                <button onClick={() => setFont('font-montserrat')} className={`px-3 py-0.5 rounded transition-colors ${font === 'font-montserrat' ? `bg-${p}-600 text-white` : `hover:bg-${g}-100 ${isDarkMode ? `hover:bg-${g}-800` : ''}`}`}>Montserrat</button>
-                <button onClick={() => setFont('font-inter')} className={`px-3 py-0.5 rounded transition-colors ${font === 'font-inter' ? `bg-${p}-600 text-white` : `hover:bg-${g}-100 ${isDarkMode ? `hover:bg-${g}-800` : ''}`}`}>Inter</button>
-            </div>
-
-            <div className={`w-px h-4 bg-${g}-200 hidden sm:block`}></div>
-
-            {/* Selector de Tema */}
-            <div className="flex items-center gap-2">
-                <Palette className="size-3" />
-                <span className="opacity-80 font-mono">TEMA:</span>
-                <div className="flex gap-1">
-                    {(Object.keys(THEMES) as ThemeKey[]).map((key) => (
-                        <button 
-                            key={key}
-                            onClick={() => setCurrentTheme(key)}
-                            className={`size-5 rounded-full flex items-center justify-center transition-transform hover:scale-110 ${currentTheme === key ? 'ring-2 ring-white' : ''}`}
-                            style={{ backgroundColor: THEMES[key].hex }}
-                            title={THEMES[key].label}
-                        >
-                            {currentTheme === key && <Check className="size-3 text-white" strokeWidth={3} />}
-                        </button>
-                    ))}
-                </div>
-            </div>
-
-            <div className={`w-px h-4 bg-${g}-200 hidden sm:block`}></div>
-
-            {/* Selector de Modo Oscuro */}
-            <button onClick={() => setIsDarkMode(!isDarkMode)} className={`flex items-center gap-2 px-3 py-0.5 rounded-full transition-all ${isDarkMode ? `bg-${g}-800 text-white ring-1 ring-${g}-700` : `bg-${g}-100 text-${g}-600 hover:bg-${g}-200`}`}>
-                {isDarkMode ? <Moon className="size-3" /> : <Sun className="size-3 text-amber-500" />}
-                <span className="font-bold tracking-wide text-[10px]">{isDarkMode ? 'OSCURO' : 'CLARO'}</span>
-            </button>
-
-          </div>
-      </div>
 
       <main className="min-h-screen">
         
